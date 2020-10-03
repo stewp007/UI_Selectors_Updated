@@ -1,8 +1,6 @@
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -25,26 +23,16 @@ public abstract class SemanticControl {
     private final Display display;
     /** The SWT Shell used for the UI presenter */
     private final Shell shell;
-    /** The layout of the group of check boxes (Vertical as default) */
-    private final RowLayout shellLayout;
 
     /**
      * Constructor for Semantic Control
-     * 
-     * @param layout the layout of the Shell: true for horizontal and false for
-     *               vertical
      */
-    public SemanticControl(boolean layout) {
+    public SemanticControl() {
         this.allValues = new LinkedList<>();
         this.currValue = new LinkedList<>();
         this.views = new LinkedList<>();
         this.display = new Display();
         this.shell = new Shell(display);
-        if (layout) {
-            this.shellLayout = new RowLayout(SWT.HORIZONTAL);
-        } else {
-            this.shellLayout = new RowLayout(SWT.VERTICAL);
-        }
     }
 
     /**
@@ -75,6 +63,14 @@ public abstract class SemanticControl {
     public void addManyToAllValues(List<Object> values) {
         this.getAllValues().addAll(values);
     }
+
+    /**
+     * Adds a view to the current list of views
+     * 
+     * @param view   a value to add to the current Values
+     * @param layout the layout of the presenter buttons
+     */
+    public abstract void addView(Views view, boolean layout);
 
     /**
      * Gets a list of all the model's views
@@ -163,15 +159,6 @@ public abstract class SemanticControl {
      */
     public void openShell() {
         this.getShell().open();
-    }
-
-    /**
-     * Gets the layout of the shell
-     * 
-     * @return the layout of the shell
-     */
-    public RowLayout getShellLayout() {
-        return shellLayout;
     }
 
 }
