@@ -1,7 +1,12 @@
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * All UiViews must contain a controller
@@ -13,12 +18,35 @@ public abstract class UiView {
 
     /** This list of one or many buttons */
     private final List<Button> buttons;
+    /** The group of check boxes */
+    private final Composite buttonGroup;
+    /** The name of the group of check boxes */
+    private final Label groupLabel;
+    /** The model that contains the shell and display */
+    private final SemanticControl model;
+    /** The type of view */
+    private final Views type;
 
     /**
      * Constructor of the UiView
+     * 
+     * @param buttonLayout the layout of the buttons: true for horizontal and false
+     *                     for negative
+     * @param model        the model containing the shell of the view
+     * @param type         the type of view
      */
-    public UiView() {
+    public UiView(boolean buttonLayout, SemanticControl model, Views type) {
         this.buttons = new LinkedList<>();
+        this.model = model;
+        this.buttonGroup = new Composite(model.getShell(), SWT.SCROLLBAR_OVERLAY);
+        this.groupLabel = new Label(buttonGroup, SWT.CHECK);
+        // groupLabel.setVisible(true);
+        if (buttonLayout) {
+            this.buttonGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+        } else {
+            this.buttonGroup.setLayout(new RowLayout(SWT.VERTICAL));
+        }
+        this.type = type;
     }
 
     /**
@@ -31,6 +59,51 @@ public abstract class UiView {
     }
 
     /**
+     * Get the group of check boxes in the presenter
+     * 
+     * @return the group of check boxes in the presenter
+     */
+    public Composite getButtonGroup() {
+        return buttonGroup;
+    }
+
+    /**
+     * Gets the name of the group of check boxes
+     * 
+     * @return the name of the group of check boxes
+     */
+    public Label getGroupLabel() {
+        return groupLabel;
+    }
+
+    /**
+     * Gets the model associated with this view
+     * 
+     * @return the model associated with this view
+     */
+    public SemanticControl getModel() {
+        return model;
+    }
+
+    /**
+     * Sets the title of the group of buttons
+     * 
+     * @param title the title of the group of check boxes
+     */
+    public void setGroupTitle(String title) {
+        this.groupLabel.setText(title);
+    }
+
+    /**
+     * Adds a colored background to the group of buttons
+     * 
+     * @param color the color of the background from SWT class
+     */
+    public void setGroupBackground(int color) {
+        getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
+    }
+
+    /**
      * Adds a button to the presenter
      * 
      * @param label the label attached to the button
@@ -38,10 +111,27 @@ public abstract class UiView {
     public abstract void addButton(String label);
 
     /**
+     * Removes a button from the presenter. (Instead of disposing, the button
+     * visibility is set to false, with the ability to reuse the button later)
+     * 
+     * @param label the label attached to the button to be removed
+     */
+    public abstract void removeButton(String label);
+
+    /**
      * Adds many button to the presenter
      * 
      * @param list the list of labels to attach to the buttons
      */
     public abstract void addManyButtons(List<Object> list);
+
+    /**
+     * Gets the type of view
+     * 
+     * @return the type of view
+     */
+    public Views getType() {
+        return type;
+    }
 
 }
