@@ -4,9 +4,7 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * 
@@ -18,14 +16,6 @@ import org.eclipse.swt.widgets.Label;
  */
 public class FullListView extends UiView {
 
-    /** The group of check boxes */
-    private final Group checkGroup;
-    /** The name of the group of check boxes */
-    private final Label groupLabel;
-    /** The layout of the group of check boxes (Vertical as default) */
-    private final RowLayout buttonLayout;
-    /** The model that contains the shell and display */
-    private final SemanticControl model;
     /** The number of check boxes of the presenter */
     private int numBoxes;
 
@@ -36,68 +26,92 @@ public class FullListView extends UiView {
      * @param buttonLayout Layout of the Buttons: true for horizontal and false for
      *                     vertical
      * @param model        the model associated with the shell and display
+     * @param type         the type of view
      */
-    public FullListView(int numBoxes, boolean buttonLayout, SemanticControl model
-    /* @SuppressWarnings("javadoc") Shell shell */) {
-        super();
-        this.model = null;
-        this.checkGroup = new Group(model.getShell(), SWT.FILL);
-        this.groupLabel = new Label(checkGroup, SWT.CHECK);
-        this.groupLabel.setText("Test");
-        if (buttonLayout) {
-            this.buttonLayout = new RowLayout(SWT.HORIZONTAL);
-        } else {
-            this.buttonLayout = new RowLayout(SWT.VERTICAL);
-        }
+    public FullListView(int numBoxes, boolean buttonLayout, SemanticControl model, Views type) {
+        super(buttonLayout, model, type);
         model.getShell().setLayout(new RowLayout());
-        this.checkGroup.setLayout(this.buttonLayout);
         this.numBoxes = numBoxes;
     }
 
     /**
-     * Get the group of check boxes in the presenter
+     * Helper function to see if a button already exists
      * 
-     * @return the group of check boxes in the presenter
+     * @param label the label attach to the button
+     * @return the button if it exists, or null otherwise
      */
-    public Composite getCheckGroup() {
-        return checkGroup;
+    public Button buttonExists(String label) {
+        Button exists = null;
+        for (Button button : getButtons()) {
+            if (button.getText().equals(label)) {
+                button.setVisible(true);
+                exists = button;
+                break;
+            }
+        }
+        return exists;
     }
 
-    /**
-     * Adds text to the label of the group of check boxes
-     * 
-     * @param label the new label of the group of check boxes
-     */
-    public void addGroupLabel(String label) {
-        this.getGroupLabel().setText(label);
-    }
-
-    /**
-     * Adds a new check box to the list of check boxes
-     * 
-     * @param label the label attached to the new check box
-     */
     @Override
     public void addButton(String label) {
-        Button newButton = new Button(this.checkGroup, SWT.CHECK);
-        newButton.setText(label);
-        this.getButtons().add(newButton);
-        this.setNumBoxes(getNumBoxes() + 1);
+        Button newButton = buttonExists(label);
+        if (newButton == null) {
+            newButton = new Button(this.getButtonGroup(), SWT.CHECK);
+            newButton.setText(label);
+            newButton.setVisible(true);
+            this.getButtons().add(newButton);
+            for (Control child : getButtonGroup().getChildren()) {
+                if (child instanceof Button && child.isVisible()) {
+                    newButton.moveBelow(child);
+                }
+            }
+            getButtonGroup().update();
+            this.setNumBoxes(getNumBoxes() + 1);
+        }
+        for (Control child : getButtonGroup().getChildren()) {
+            if (child instanceof Button && child.isVisible()) {
+                newButton.moveBelow(child);
+            }
+        }
+        getButtonGroup().update();
     }
 
-    /**
-     * Adds a new check box to the list of check boxes
-     * 
-     * @param labels the label attached to the new check box
-     */
     @Override
     public void addManyButtons(List<Object> labels) {
         for (int i = 0; i < labels.size(); i++) {
-            Button newButton = new Button(this.checkGroup, SWT.CHECK);
-            newButton.setText(labels.get(i).toString());
-            this.getButtons().add(newButton);
-            this.setNumBoxes(getNumBoxes() + 1);
-            System.out.println("Added new button: " + labels.get(i).toString());
+            Button newButton = buttonExists((String) labels.get(i));
+            if (newButton == null) {
+                newButton = new Button(this.getButtonGroup(), SWT.CHECK);
+                newButton.setText(labels.get(i).toString());
+                newButton.setVisible(true);
+                this.getButtons().add(newButton);
+                this.setNumBoxes(getNumBoxes() + 1);
+                System.out.println("Added new button: " + labels.get(i).toString());
+            }
+            for (Control child : getButtonGroup().getChildren()) {
+                if (child instanceof Button && child.isVisible()) {
+                    newButton.moveBelow(child);
+                }
+            }
+            getButtonGroup().update();
+
+        }
+    }
+
+    @Override
+    public void removeButton(String label) {
+        for (Button button : getButtons()) {
+            if (button.getText().equals(label) && button != null) {
+                button.setVisible(false);
+
+                for (Control child : getButtonGroup().getChildren()) {
+                    if (child instanceof Button && child.isVisible()) {
+                        child.moveAbove(button);
+                    }
+                }
+                getButtonGroup().update();
+
+            }
         }
     }
 
@@ -117,32 +131,5 @@ public class FullListView extends UiView {
      */
     public void setNumBoxes(int numBoxes) {
         this.numBoxes = numBoxes;
-    }
-
-    /**
-     * Gets the name of the group of check boxes
-     * 
-     * @return the name of the group of check boxes
-     */
-    public Label getGroupLabel() {
-        return groupLabel;
-    }
-
-    /**
-     * Gets the row layout of the group of check boxes
-     * 
-     * @return the row layout of the group of check boxes
-     */
-    public RowLayout getButtonLayout() {
-        return buttonLayout;
-    }
-
-    /**
-     * Gets the model associated with this view
-     * 
-     * @return the model associated with this view
-     */
-    public SemanticControl getModel() {
-        return model;
     }
 }
