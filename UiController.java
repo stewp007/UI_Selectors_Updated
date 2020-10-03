@@ -35,19 +35,28 @@ public class UiController {
      * Initializes the views of the controller
      */
     public void initViews() {
-        model.setShellText("This is a test");
+        int count = 0;
+        int size = model.getAllValues().size();
         for (Object view : views.toArray()) {
             UiView tempView = (UiView) view;
-            tempView.addManyButtons(model.getAllValues());
-
+            for (Object value : model.getAllValues().subList(count, size)) {
+                if (value != null) {
+                    tempView.addButton((String) value);
+                } else {
+                    count++;
+                    break;
+                }
+                count++;
+            }
         }
-        // model.getShell().pack();
     }
 
     /**
      * Initializes the Controller
      */
     public void initController() {
+        model.addView(Views.FULL, false);
+        model.getViews().get(2).setGroupTitle("Current Order");
         for (Object view : views.toArray()) {
             UiView tempView = (UiView) view;
             List<Button> buttons = tempView.getButtons();
@@ -57,14 +66,51 @@ public class UiController {
                     @Override
                     public void widgetSelected(SelectionEvent e) {
                         Button source = (Button) e.getSource();
-
                         if (source.getSelection()) {
                             model.getCurrValue().add(source.getText());
+                            model.getViews().get(2).addButton(source.getText());
+                            System.out.println("Added: " + source.getText());
+                            int count = model.getViews().get(2).getButtons().size();
+                            model.getViews().get(2).getButtons().get(count - 1).setSelection(true);
+                            model.getViews().get(2).getButtonGroup().layout();
+                            model.getShell().layout();
+                            model.getShell().redraw();
+                            // updateView();
+                        } else {
+                            model.getCurrValue().remove(source.getText());
+                            model.getViews().get(2).removeButton(source.getText());
+                            System.out.println("Removed: " + source.getText());
+                            // model.getViews().get(2).getButtonGroup().update();
+                            model.getViews().get(2).getButtonGroup().layout();
+                            model.getShell().layout();
+                            model.getShell().redraw();
                         }
                     }
                 });
             }
         }
+        // updateView();
+    }
+
+    /**
+     * Updates a new result view with the current values of the model
+     */
+    public void updateView() {
+
+    }
+
+    /**
+     * Opens the Shell and displays the Presenters until exited
+     */
+    public void launchUi() {
+        model.getShell().pack();
+        model.getShell().open();
+        while (!model.getShell().isDisposed()) {
+            if (!model.getDisplay().readAndDispatch()) {
+                model.getDisplay().sleep();
+            }
+        }
+        model.getDisplay().dispose();
     }
 
     /**
