@@ -10,23 +10,22 @@ public class MfromN extends SemanticControl {
 
     /**
      * Constructor for MfromN Model
-     * 
-     * @param layout the layout of the Shell: true for horizontal and false for
-     *               vertical
      */
-    public MfromN(boolean layout) {
-        super(layout);
+    public MfromN() {
+        super();
     }
 
     /**
      * Adds a view to the current list of views
      * 
-     * @param view a value to add to the current Values
+     * @param view   a value to add to the current Values
+     * @param layout the layout of the presenter buttons
      */
-    public void addView(Views view) {
+    @Override
+    public void addView(Views view, boolean layout) {
         switch (view) {
             case FULL:
-                getViews().add(new FullListView(0, false, this));
+                getViews().add(new FullListView(0, layout, this, Views.FULL));
                 break;
             case SCROLLING:
                 // views.add(new UiView());
