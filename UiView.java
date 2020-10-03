@@ -1,9 +1,7 @@
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import java.util.LinkedList;
+import java.util.List;
 
-/**
- * 
- */
+import org.eclipse.swt.widgets.Button;
 
 /**
  * All UiViews must contain a controller
@@ -13,44 +11,37 @@ import org.eclipse.swt.widgets.Shell;
  */
 public abstract class UiView {
 
-    /** The SWT Display used for the UI presenter */
-    private Display display;
-    /** The SWT Shell used for the UI presenter */
-    private final Shell shell;
+    /** This list of one or many buttons */
+    private final List<Button> buttons;
 
     /**
      * Constructor of the UiView
      */
     public UiView() {
-        this.display = new Display();
-        this.shell = new Shell(display);
+        this.buttons = new LinkedList<>();
     }
 
     /**
-     * Gets the Display of the UI presenter
+     * Gets the list of buttons
      * 
-     * @return the display of the UI presenter
+     * @return the list of buttons
      */
-    public Display getDisplay() {
-        return display;
+    public List<Button> getButtons() {
+        return buttons;
     }
 
     /**
-     * Sets the Display of the UI presenter
+     * Adds a button to the presenter
      * 
-     * @param display the new Display of the UI presenter
+     * @param label the label attached to the button
      */
-    public void setDisplay(Display display) {
-        this.display = display;
-    }
+    public abstract void addButton(String label);
 
     /**
-     * Gets the shell of the UI presenter
+     * Adds many button to the presenter
      * 
-     * @return the shell of the UI presenter
+     * @param list the list of labels to attach to the buttons
      */
-    public Shell getShell() {
-        return shell;
-    }
+    public abstract void addManyButtons(List<Object> list);
 
 }
