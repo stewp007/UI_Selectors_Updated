@@ -3,8 +3,11 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 
 /**
  * 
@@ -17,8 +20,12 @@ import org.eclipse.swt.widgets.Control;
 public class ScrollListView extends UiView {
     /** The number of check boxes of the presenter */
     private int numBoxes;
+    /** The containing group for the scrollGroup and buttons */
+    private final Group viewGroup;
     /** A scrollable group of check boxes */
     private final ScrolledComposite scrollGroup;
+    /** The group of check boxes */
+    private final Composite buttonGroup;
 
     /**
      * Constructor for the Full List View class
@@ -30,20 +37,45 @@ public class ScrollListView extends UiView {
      * @param type         the type of view
      */
     public ScrollListView(int numBoxes, boolean buttonLayout, SemanticControl model, Views type) {
-        super(buttonLayout, model, type, SWT.V_SCROLL);
+        super(buttonLayout, model, type, SWT.NONE);
+        this.viewGroup = new Group(model.getShell(), SWT.NONE);
+        this.scrollGroup = new ScrolledComposite(this.viewGroup, SWT.V_SCROLL);
 
-        this.scrollGroup = new ScrolledComposite(model.getShell(), SWT.V_SCROLL);
+        this.buttonGroup = new Composite(scrollGroup, SWT.NONE);
+        // this.groupLabel = new Label(buttonGroup, SWT.NONE);
+        this.buttonGroup.setLayout(new GridLayout());
+        this.buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         /* Possibility to move to its own function */
         /*
          * this.scrollGroup.setLayout(new GridLayout(1, false));
          * this.scrollGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-         * this.scrollGroup.setContent(getButtonGroup());
+         */
+        this.scrollGroup.setContent(getButtonGroup());
+        setGroupLayout();
+        scrollGroup.setExpandHorizontal(true);
+        scrollGroup.setExpandVertical(true);
+        scrollGroup.setMinSize(buttonGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        /*
          * this.scrollGroup.setExpandHorizontal(true);
          * this.scrollGroup.setExpandVertical(true);
          * this.scrollGroup.setMinSize(scrollGroup.computeSize(SWT.DEFAULT,
          * SWT.DEFAULT));
          */
         this.numBoxes = numBoxes;
+    }
+
+    /**
+     * Sets pre-filled layout data for the viewGroup and scrollGroup
+     */
+    private void setGroupLayout() {
+        viewGroup.setLayout(new GridLayout(1, false));
+        GridData scrollData = new GridData(SWT.FILL, SWT.FILL, true, false);
+        scrollData.heightHint = 400;
+        viewGroup.setLayoutData(scrollData);
+        scrollGroup.setLayout(new GridLayout(1, false));
+        scrollGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        buttonGroup.setLayout(new GridLayout());
+        this.buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     }
 
     /**
@@ -152,5 +184,28 @@ public class ScrollListView extends UiView {
      */
     public ScrolledComposite getScrollGroup() {
         return scrollGroup;
+    }
+
+    /**
+     * Gets the view group
+     * 
+     * @return the group containing the scrollcomposite and the buttongroup
+     */
+    public Group getViewGroup() {
+        return viewGroup;
+    }
+
+    /**
+     * Sets the name of the View group
+     * 
+     * @param name the name of the View group
+     */
+    public void setViewGroupName(String name) {
+        getViewGroup().setText(name);
+    }
+
+    @Override
+    public Composite getButtonGroup() {
+        return super.getButtonGroup();
     }
 }
