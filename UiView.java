@@ -2,7 +2,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -34,18 +35,17 @@ public abstract class UiView {
      *                     for negative
      * @param model        the model containing the shell of the view
      * @param type         the type of view
+     * @param groupType    the type of group: i.e. SWT.NONE, SWT.V_SCROLL...
      */
-    public UiView(boolean buttonLayout, SemanticControl model, Views type) {
+    public UiView(boolean buttonLayout, SemanticControl model, Views type, int groupType) {
         this.buttons = new LinkedList<>();
         this.model = model;
-        this.buttonGroup = new Composite(model.getShell(), SWT.SCROLLBAR_OVERLAY);
-        this.groupLabel = new Label(buttonGroup, SWT.CHECK);
-        // groupLabel.setVisible(true);
-        if (buttonLayout) {
-            this.buttonGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
-        } else {
-            this.buttonGroup.setLayout(new RowLayout(SWT.VERTICAL));
-        }
+        model.getShell().setLayout(new GridLayout());
+        model.getShell().setLayoutData(new GridData());
+        this.buttonGroup = new Composite(model.getShell(), groupType);
+        this.groupLabel = new Label(buttonGroup, SWT.NONE);
+        this.buttonGroup.setLayout(new GridLayout());
+        this.buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.type = type;
     }
 
