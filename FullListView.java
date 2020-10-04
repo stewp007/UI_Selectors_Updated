@@ -2,7 +2,6 @@
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 
@@ -29,8 +28,7 @@ public class FullListView extends UiView {
      * @param type         the type of view
      */
     public FullListView(int numBoxes, boolean buttonLayout, SemanticControl model, Views type) {
-        super(buttonLayout, model, type);
-        model.getShell().setLayout(new RowLayout());
+        super(buttonLayout, model, type, SWT.NONE);
         this.numBoxes = numBoxes;
     }
 
@@ -69,8 +67,8 @@ public class FullListView extends UiView {
             this.setNumBoxes(getNumBoxes() + 1);
         }
         for (Control child : getButtonGroup().getChildren()) {
-            if (child instanceof Button && child.isVisible()) {
-                newButton.moveBelow(child);
+            if (child instanceof Button && !child.isVisible()) {
+                child.moveBelow(newButton);
             }
         }
         getButtonGroup().update();
@@ -89,8 +87,8 @@ public class FullListView extends UiView {
                 System.out.println("Added new button: " + labels.get(i).toString());
             }
             for (Control child : getButtonGroup().getChildren()) {
-                if (child instanceof Button && child.isVisible()) {
-                    newButton.moveBelow(child);
+                if (child instanceof Button && !child.isVisible()) {
+                    child.moveBelow(newButton);
                 }
             }
             getButtonGroup().update();
