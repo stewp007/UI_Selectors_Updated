@@ -27,8 +27,9 @@ public class MfromN extends SemanticControl {
             case FULL:
                 getViews().add(new FullListView(0, layout, this, Views.FULL));
                 break;
-            case SCROLLING:
-                // views.add(new UiView());
+            case SCROLL:
+                getViews().add(new ScrollListView(0, layout, this, Views.SCROLL));
+                break;
             case CHECK:
                 // views.add(new UiView());
             default:
