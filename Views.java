@@ -7,7 +7,7 @@ public enum Views {
     /** Fully-displayed list of labeled checkboxes */
     FULL,
     /** Scrollable list of labeled checkboxes */
-    SCROLLING,
+    SCROLL,
     /** Array of labeled checkboxes */
     CHECK;
 }
