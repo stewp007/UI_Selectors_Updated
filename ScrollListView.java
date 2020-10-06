@@ -37,7 +37,7 @@ public class ScrollListView extends UiView {
      * @param type         the type of view
      */
     public ScrollListView(int numBoxes, boolean buttonLayout, SemanticControl model, Views type) {
-        super(buttonLayout, model, type, SWT.NONE);
+        super(model, type);
         this.viewGroup = new Group(model.getShell(), SWT.NONE);
         this.scrollGroup = new ScrolledComposite(this.viewGroup, SWT.V_SCROLL);
 
