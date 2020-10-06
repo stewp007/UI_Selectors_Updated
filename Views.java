@@ -9,5 +9,7 @@ public enum Views {
     /** Scrollable list of labeled checkboxes */
     SCROLL,
     /** Array of labeled checkboxes */
-    CHECK;
+    CHECK,
+    /** Two Full List views: one for selections, one for choices */
+    DOUBLE;
 }
