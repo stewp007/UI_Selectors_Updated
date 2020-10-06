@@ -6,6 +6,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
@@ -25,28 +26,44 @@ public abstract class UiView {
     private final Label groupLabel;
     /** The model that contains the shell and display */
     private final SemanticControl model;
+    /** The current number of buttons of the presenter */
+    private int numButtons;
     /** The type of view */
     private final Views type;
 
     /**
      * Constructor of the UiView
      * 
-     * @param buttonLayout the layout of the buttons: true for horizontal and false
-     *                     for negative
-     * @param model        the model containing the shell of the view
-     * @param type         the type of view
-     * @param groupType    the type of group: i.e. SWT.NONE, SWT.V_SCROLL...
+     * @param model the model containing the shell of the view
+     * @param type  the type of view
      */
-    public UiView(boolean buttonLayout, SemanticControl model, Views type, int groupType) {
+    public UiView(SemanticControl model, Views type) {
         this.buttons = new LinkedList<>();
         this.model = model;
-        model.getShell().setLayout(new GridLayout());
-        model.getShell().setLayoutData(new GridData());
-        this.buttonGroup = new Composite(model.getShell(), groupType);
+        model.getShell().setLayout(new GridLayout(2, false));
+        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
         this.groupLabel = new Label(buttonGroup, SWT.NONE);
-        this.buttonGroup.setLayout(new GridLayout());
+        this.buttonGroup.setLayout(new GridLayout(1, true));
         this.buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.type = type;
+        this.numButtons = 0;
+        initViews();
+    }
+
+    /**
+     * Initializes the views of the controller
+     */
+    public void initViews() {
+        if ((type == Views.DOUBLE) && this instanceof FullListView) {
+            System.out.println("Not for this view.");
+        } else {
+            for (Object value : model.getAllValues()) {
+                if (value != null) {
+                    addButton((String) value);
+                }
+            }
+        }
     }
 
     /**
@@ -104,6 +121,24 @@ public abstract class UiView {
     }
 
     /**
+     * Helper function to see if a button already exists
+     * 
+     * @param label the label attach to the button
+     * @return the button if it exists, or null otherwise
+     */
+    public Button buttonExists(String label) {
+        Button exists = null;
+        for (Button button : getButtons()) {
+            if (button.getText().equals(label)) {
+                button.setVisible(true);
+                exists = button;
+                break;
+            }
+        }
+        return exists;
+    }
+
+    /**
      * Adds a button to the presenter
      * 
      * @param label the label attached to the button
@@ -116,14 +151,28 @@ public abstract class UiView {
      * 
      * @param label the label attached to the button to be removed
      */
-    public abstract void removeButton(String label);
+    public void removeButton(String label) {
+        for (Button button : getButtons()) {
+            if (button.getText().equals(label) && button != null) {
+                button.setVisible(false);
+
+                for (Control child : getButtonGroup().getChildren()) {
+                    if (child instanceof Button && child.isVisible()) {
+                        child.moveAbove(button);
+                    }
+                }
+                getButtonGroup().update();
+
+            }
+        }
+    }
 
     /**
      * Adds many button to the presenter
      * 
-     * @param list the list of labels to attach to the buttons
+     * @param labels the list of labels to attach to the buttons
      */
-    public abstract void addManyButtons(List<Object> list);
+    public abstract void addManyButtons(List<Object> labels);
 
     /**
      * Gets the type of view
@@ -132,6 +181,24 @@ public abstract class UiView {
      */
     public Views getType() {
         return type;
+    }
+
+    /**
+     * Gets the number of buttons
+     * 
+     * @return the current number of buttons
+     */
+    public int getNumButtons() {
+        return numButtons;
+    }
+
+    /**
+     * Sets the number of buttons
+     * 
+     * @param i the new number of boxes
+     */
+    public void setNumButtons(int i) {
+        numButtons = i;
     }
 
 }
