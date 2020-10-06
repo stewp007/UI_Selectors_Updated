@@ -11,5 +11,15 @@ public enum Views {
     /** Array of labeled checkboxes */
     CHECK,
     /** Two Full List views: one for selections, one for choices */
-    DOUBLE;
+    DOUBLE,
+	/** Array of bullets with labels next to each one */
+	RADIOB,
+	/** Array of rectangular labeled buttons */
+	BOXB,
+	/** Button or symbol that pops up a choose-one menu */
+	POPUP,
+	/** Button that shows current value; clicks go to next value */
+	CIRCLEB,
+	/** Text box that is shows and accepts only valid value-names */
+	TEXTFIELD;	
 }
