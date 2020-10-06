@@ -161,4 +161,18 @@ public abstract class SemanticControl {
         this.getShell().open();
     }
 
+    /**
+     * Opens the Shell and displays the Presenters until exited
+     */
+    public void launchUi() {
+        shell.pack();
+        shell.open();
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+        display.dispose();
+    }
+
 }
