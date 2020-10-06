@@ -2,6 +2,8 @@
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 
@@ -14,85 +16,90 @@ import org.eclipse.swt.widgets.Control;
  *         for M-From-N Semantic Control
  */
 public class FullListView extends UiView {
-
-    /** The number of check boxes of the presenter */
-    private int numBoxes;
-
     /**
      * Constructor for the Full List View class
      * 
-     * @param numBoxes     the number of check boxes of the presenter
-     * @param buttonLayout Layout of the Buttons: true for horizontal and false for
-     *                     vertical
-     * @param model        the model associated with the shell and display
-     * @param type         the type of view
+     * @param model the model associated with the shell and display
+     * @param type  the type of view
      */
-    public FullListView(int numBoxes, boolean buttonLayout, SemanticControl model, Views type) {
-        super(buttonLayout, model, type, SWT.NONE);
-        this.numBoxes = numBoxes;
-    }
-
-    /**
-     * Helper function to see if a button already exists
-     * 
-     * @param label the label attach to the button
-     * @return the button if it exists, or null otherwise
-     */
-    public Button buttonExists(String label) {
-        Button exists = null;
-        for (Button button : getButtons()) {
-            if (button.getText().equals(label)) {
-                button.setVisible(true);
-                exists = button;
-                break;
-            }
-        }
-        return exists;
+    public FullListView(SemanticControl model, Views type) {
+        super(model, type);
     }
 
     @Override
     public void addButton(String label) {
         Button newButton = buttonExists(label);
         if (newButton == null) {
+            System.out.println("New Visible: " + label);
             newButton = new Button(this.getButtonGroup(), SWT.CHECK);
             newButton.setText(label);
             newButton.setVisible(true);
-            this.getButtons().add(newButton);
-            for (Control child : getButtonGroup().getChildren()) {
-                if (child instanceof Button && child.isVisible()) {
-                    newButton.moveBelow(child);
-                }
-            }
-            getButtonGroup().update();
-            this.setNumBoxes(getNumBoxes() + 1);
-        }
-        for (Control child : getButtonGroup().getChildren()) {
-            if (child instanceof Button && !child.isVisible()) {
-                child.moveBelow(newButton);
-            }
-        }
-        getButtonGroup().update();
-    }
+            newButton.addSelectionListener(new SelectionAdapter() {
 
-    @Override
-    public void addManyButtons(List<Object> labels) {
-        for (int i = 0; i < labels.size(); i++) {
-            Button newButton = buttonExists((String) labels.get(i));
-            if (newButton == null) {
-                newButton = new Button(this.getButtonGroup(), SWT.CHECK);
-                newButton.setText(labels.get(i).toString());
-                newButton.setVisible(true);
-                this.getButtons().add(newButton);
-                this.setNumBoxes(getNumBoxes() + 1);
-                System.out.println("Added new button: " + labels.get(i).toString());
-            }
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    Button source = (Button) e.getSource();
+                    if (source.getSelection()) {
+                        getModel().getCurrValue().add(source.getText());
+                    } else {
+                        getModel().getCurrValue().remove(source.getText());
+                    }
+                }
+            });
+            this.getButtons().add(newButton);
+            this.setNumButtons(getNumButtons() + 1);
+        } else {
+            newButton.setVisible(true);
+            System.out.println("Now Visible: " + newButton.getText());
             for (Control child : getButtonGroup().getChildren()) {
                 if (child instanceof Button && !child.isVisible()) {
                     child.moveBelow(newButton);
                 }
             }
-            getButtonGroup().update();
 
+        }
+        getButtonGroup().update();
+    }
+
+    /**
+     * Adds a new button to the presenter
+     * 
+     * @param button the new button to add
+     */
+    public void addButton(Button button) {
+        System.out.println("Adding button");
+        if ((button.getStyle() & SWT.CHECK) != SWT.CHECK) {
+            System.out.println("Invalid Button type: " + button.getStyle());
+        } else {
+            Button newButton = buttonExists(button.getText());
+            if (newButton == null) {
+                getButtons().add(button);
+                System.out.println("Adding new new button");
+                for (Control child : getButtonGroup().getChildren()) {
+                    if (child instanceof Button && child.isVisible()) {
+                        child.moveBelow(button);
+                    }
+                }
+                this.setNumButtons(getNumButtons() + 1);
+            } else {
+                System.out.println("Adding new button");
+                newButton.setVisible(button.isVisible());
+                newButton.setSelection(button.getSelection());
+                newButton.setGrayed(button.getGrayed());
+                newButton.setEnabled(button.getEnabled());
+                for (Control child : getButtonGroup().getChildren()) {
+                    if (child instanceof Button && !child.isVisible()) {
+                        child.moveBelow(newButton);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void addManyButtons(List<Object> labels) {
+        for (int i = 0; i < labels.size(); i++) {
+            addButton((String) labels.get(i));
         }
     }
 
@@ -111,23 +118,5 @@ public class FullListView extends UiView {
 
             }
         }
-    }
-
-    /**
-     * Gets the total number of check boxes
-     * 
-     * @return the total number of check boxes
-     */
-    public int getNumBoxes() {
-        return numBoxes;
-    }
-
-    /**
-     * Sets the total number of check boxes
-     * 
-     * @param numBoxes the total number of check boxes
-     */
-    public void setNumBoxes(int numBoxes) {
-        this.numBoxes = numBoxes;
     }
 }
