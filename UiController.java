@@ -40,6 +40,7 @@ public class UiController {
         for (Object view : views.toArray()) {
             UiView tempView = (UiView) view;
             for (Object value : model.getAllValues().subList(count, size)) {
+                System.out.println(value);
                 if (value != null) {
                     tempView.addButton((String) value);
                 } else {
@@ -55,7 +56,7 @@ public class UiController {
      * Initializes the Controller
      */
     public void initController() {
-        model.addView(Views.FULL, false);
+        // model.addView(Views.FULL, false);
         model.getViews().get(2).setGroupTitle("Current Order");
         for (Object view : views.toArray()) {
             UiView tempView = (UiView) view;
@@ -72,6 +73,8 @@ public class UiController {
                             System.out.println("Added: " + source.getText());
                             int count = model.getViews().get(2).getButtons().size();
                             model.getViews().get(2).getButtons().get(count - 1).setSelection(true);
+                            model.getViews().get(2).getButtons().get(count - 1).setGrayed(true);
+                            model.getViews().get(2).getButtons().get(count - 1).setEnabled(false);
                             model.getViews().get(2).getButtonGroup().layout();
                             model.getShell().layout();
                             model.getShell().redraw();
@@ -87,6 +90,7 @@ public class UiController {
                         }
                     }
                 });
+
             }
         }
         // updateView();
