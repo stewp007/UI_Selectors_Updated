@@ -28,7 +28,7 @@ public class MfromN extends SemanticControl {
                 getViews().add(new FullListView(this, Views.FULL));
                 break;
             case SCROLL:
-                getViews().add(new ScrollListView(0, layout, this, Views.SCROLL));
+                getViews().add(new ScrollListView(this, Views.SCROLL));
                 break;
             case DOUBLE:
                 getViews().add(new DoubleListView(this));
@@ -39,7 +39,9 @@ public class MfromN extends SemanticControl {
     }
 
     /**
-     * @param view
+     * Adds a UiView object to the list views of this presenter
+     * 
+     * @param view the new view to add to the model
      */
     public void addView(UiView view) {
         if ((view.getType() == Views.FULL) || (view.getType() == Views.SCROLL) || (view.getType() == Views.DOUBLE)) {
