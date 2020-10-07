@@ -10,16 +10,30 @@ public class TestRadioButtons {
 	        gender.add("Male");
 	        gender.add("Female");
 	        gender.add("I don't want to answer");
-	        OneFromN model2 = new OneFromN();
-	        model2.addManyToAllValues(gender);
+	        gender.add(null);
+	        List<Object> agreement = new LinkedList<>();
+	        agreement.add("Agree");
+	        agreement.add("Not agree");
+	        OneFromN model = new OneFromN();
 	        
-	        RadioButtonView view2 = new RadioButtonView(model2, Views.RADIOB);
-	        model2.addView(view2);
-	        model2.getViews().get(0).setGroupTitle("Gender:");
-	        model2.getViews().get(0).setGroupBackground(SWT.COLOR_GRAY);
+	        model.addManyToAllValues(gender);
+	        BoxButtonView view = new BoxButtonView(model, Views.BOXB);
+	        model.addView(view);
+	        model.getViews().get(0).setGroupTitle("Agreement:");
+	        model.getViews().get(0).setGroupBackground(SWT.COLOR_BLUE);
 	        
-	        System.out.println("Before " + model2.getCurrValue());
-	        model2.launchUi();
-	        System.out.println("After " + model2.getCurrValue());
+	        //model.addManyToAllValues(agreement);
+	        RadioButtonView view2 = new RadioButtonView(model, Views.RADIOB);
+	        model.addView(view2);
+	        model.getViews().get(1).setGroupTitle("Gender:");
+	        model.getViews().get(1).setGroupBackground(SWT.COLOR_GRAY);
+	        
+	        //UiController controller = new UiController(model);
+	        //controller.initController();
+	        //controller.updateView();
+	        
+	        System.out.println("Before " + model.getCurrValue());
+	        model.launchUi();
+	        System.out.println("After " + model.getCurrValue());
 	 }
 }

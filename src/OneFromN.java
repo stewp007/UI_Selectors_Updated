@@ -21,10 +21,10 @@ public class OneFromN extends SemanticControl {
     public void addView(Views view, boolean layout) {
         switch (view) {
             case RADIOB:
-                getViews().add(new RadioButtonView(this, Views.FULL));
+                getViews().add(new RadioButtonView(this, Views.RADIOB));
                 break;
-//            case BOXB:
-//                getViews().add(new ScrollListView(0, layout, this, Views.SCROLL));
+            case BOXB:
+                getViews().add(new BoxButtonView(this, Views.BOXB));
 //                break;
 //            case POPUP:
 //                getViews().add(new DoubleListView(this));
