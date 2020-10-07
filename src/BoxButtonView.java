@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -9,11 +8,11 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * 
- * @author Will Array of bullets with labels Used
+ * @author Will Array of rectangular labeled buttons Used
  *         for M-From-N Semantic Control
  *
  */
-public class RadioButtonView extends UiView {
+public class BoxButtonView extends UiView {
 
 	/**
 	 * Constructor
@@ -21,7 +20,7 @@ public class RadioButtonView extends UiView {
 	 * @param model the model associated with the shell and display
 	 * @param type the type of view
 	 */
-	public RadioButtonView(SemanticControl model, Views type) {
+	public BoxButtonView(SemanticControl model, Views type) {
 		super(model, type);
 	}
 
@@ -30,7 +29,7 @@ public class RadioButtonView extends UiView {
 		Button newButton = buttonExists(label);
         if (newButton == null) {
             System.out.println("New Visible: " + label);
-            newButton = new Button(this.getButtonGroup(), SWT.RADIO);
+            newButton = new Button(this.getButtonGroup(), SWT.PUSH);
             newButton.setText(label);
             newButton.addSelectionListener(new SelectionAdapter() {
 
