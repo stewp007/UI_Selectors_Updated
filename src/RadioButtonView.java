@@ -44,7 +44,6 @@ public class RadioButtonView extends UiView {
                 }
             });
             this.getButtons().add(newButton);
-//            this.setNumButtons(getNumButtons() + 1);
         } else {
             newButton.setVisible(true);
             System.out.println("Now Visible: " + newButton.getText());
