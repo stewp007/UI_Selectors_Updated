@@ -35,12 +35,12 @@ public class RadioButtonView extends UiView {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-//                    Button source = (Button) e.getSource();
-//                    if (source.getSelection()) {
-//                        getModel().getCurrValue().add(source.getText());
-//                    } else {
-//                        getModel().getCurrValue().remove(source.getText());
-//                    }
+                    Button source = (Button) e.getSource();
+                    if (source.getSelection()) {
+                        getModel().getCurrValue().add(source.getText());
+                    } else {
+                        getModel().getCurrValue().remove(source.getText());
+                    }
                 }
             });
             this.getButtons().add(newButton);
