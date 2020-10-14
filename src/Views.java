@@ -21,5 +21,5 @@ public enum Views {
 	/** Button that shows current value; clicks go to next value */
 	CIRCLEB,
 	/** Text box that is shows and accepts only valid value-names */
-	TEXTFIELD;	
+	TEXTFIELD;
 }

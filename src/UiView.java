@@ -1,14 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * All UiViews must contain a controller
@@ -20,10 +13,6 @@ public abstract class UiView {
 
     /** This list of one or many buttons */
     private final List<Button> buttons;
-    /** The group of check boxes */
-    private final Composite buttonGroup;
-    /** The name of the group of check boxes */
-    private final Label groupLabel;
     /** The model that contains the shell and display */
     private final SemanticControl model;
     /** The current number of buttons of the presenter */
@@ -40,30 +29,10 @@ public abstract class UiView {
     public UiView(SemanticControl model, Views type) {
         this.buttons = new LinkedList<>();
         this.model = model;
-        model.getShell().setLayout(new GridLayout(2, false));
-        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
-        this.groupLabel = new Label(buttonGroup, SWT.NONE);
-        this.buttonGroup.setLayout(new GridLayout(1, true));
-        this.buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        // model.getShell().setLayout(new GridLayout(2, false));
+        // model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.type = type;
         this.numButtons = 0;
-        initViews();
-    }
-
-    /**
-     * Initializes the views of the controller
-     */
-    public void initViews() {
-        if ((type == Views.DOUBLE) && this instanceof FullListView) {
-            System.out.println("Not for this view.");
-        } else {
-            for (Object value : model.getAllValues()) {
-                if (value != null) {
-                    addButton((String) value);
-                }
-            }
-        }
     }
 
     /**
@@ -73,24 +42,6 @@ public abstract class UiView {
      */
     public List<Button> getButtons() {
         return buttons;
-    }
-
-    /**
-     * Get the group of check boxes in the presenter
-     * 
-     * @return the group of check boxes in the presenter
-     */
-    public Composite getButtonGroup() {
-        return buttonGroup;
-    }
-
-    /**
-     * Gets the name of the group of check boxes
-     * 
-     * @return the name of the group of check boxes
-     */
-    public Label getGroupLabel() {
-        return groupLabel;
     }
 
     /**
@@ -107,18 +58,7 @@ public abstract class UiView {
      * 
      * @param title the title of the group of check boxes
      */
-    public void setGroupTitle(String title) {
-        this.groupLabel.setText(title);
-    }
-
-    /**
-     * Adds a colored background to the group of buttons
-     * 
-     * @param color the color of the background from SWT class
-     */
-    public void setGroupBackground(int color) {
-        getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
-    }
+    public abstract void setGroupTitle(String title);
 
     /**
      * Helper function to see if a button already exists
@@ -151,21 +91,7 @@ public abstract class UiView {
      * 
      * @param label the label attached to the button to be removed
      */
-    public void removeButton(String label) {
-        for (Button button : getButtons()) {
-            if (button.getText().equals(label) && button != null) {
-                button.setVisible(false);
-
-                for (Control child : getButtonGroup().getChildren()) {
-                    if (child instanceof Button && child.isVisible()) {
-                        child.moveAbove(button);
-                    }
-                }
-                getButtonGroup().update();
-
-            }
-        }
-    }
+    public abstract void removeButton(String label);
 
     /**
      * Adds many button to the presenter
