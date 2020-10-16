@@ -21,10 +21,10 @@ public class OneFromN extends SemanticControl {
     public void addView(Views view, boolean layout) {
         switch (view) {
             case RADIOB:
-                getViews().add(new RadioButtonView(this, Views.RADIOB));
+                getViews().add(new RadioButtonView(this));
                 break;
             case BOXB:
-                getViews().add(new BoxButtonView(this, Views.BOXB));
+                getViews().add(new BoxButtonView(this));
 //                break;
 //            case POPUP:
 //                getViews().add(new DoubleListView(this));
@@ -50,6 +50,10 @@ public class OneFromN extends SemanticControl {
         } else {
             System.out.println("Error: Non-valid view");
         }
+    }
+    
+    public void setViewName(int number, String name) {
+    	this.getViews().get(number - 1).setGroupTitle(name);
     }
 
 }

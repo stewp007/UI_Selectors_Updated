@@ -30,8 +30,8 @@ public class RadioButtonView extends UiView {
  * @param model the model associated with the shell and display
  * @param type the type of view
  */
-public RadioButtonView(SemanticControl model, Views type) {
-	super(model, type);
+public RadioButtonView(SemanticControl model) {
+	super(model, Views.RADIOB);
 	model.getShell().setLayout(new GridLayout(2, false));
     model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     this.buttonGroup = new Composite(model.getShell(), SWT.NONE);

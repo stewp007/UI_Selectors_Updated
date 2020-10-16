@@ -3,7 +3,8 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 
-public class TestRadioButtons {
+public class Presentation {
+
 	 public static void main(String[] args) {
 
 	        List<Object> gender = new LinkedList<>();
@@ -13,20 +14,47 @@ public class TestRadioButtons {
 	        
 	        OneFromN model = new OneFromN();
 	        model.addManyToAllValues(gender);
-	        BoxButtonView view = new BoxButtonView(model);
-	        model.addView(view);
-	        model.getViews().get(0).setGroupTitle("Gender:");
-	        view.setGroupBackground(SWT.COLOR_DARK_CYAN);
 	        
-	        model.addManyToAllValues(gender);
+	        BoxButtonView view = new BoxButtonView(model);
+	        view.setGroupBackground(SWT.COLOR_DARK_GRAY);
+	        model.addView(view);
+	        model.setViewName(1, "Gender");
+	        
 	        RadioButtonView view2 = new RadioButtonView(model);
-	        model.addView(view2);
-	        model.getViews().get(1).setGroupTitle("Gender:");
 	        view2.setGroupBackground(SWT.COLOR_DARK_CYAN);
+	        model.addView(view2);
+	        model.setViewName(2, "Gender");
 	        
 	        System.out.println("Before " + model.getCurrValue());
 	        model.launchUi();
 	        System.out.println("After " + model.getCurrValue());
-	  
+	        
+	        
+	        
+	        
 	 }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+     
 }

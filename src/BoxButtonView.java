@@ -33,8 +33,8 @@ public class BoxButtonView extends UiView {
      * @param model the model associated with the shell and display
      * @param type  the type of view
      */
-    public BoxButtonView(SemanticControl model, Views type) {
-        super(model, type);
+    public BoxButtonView(SemanticControl model) {
+        super(model, Views.BOXB);
         model.getShell().setLayout(new GridLayout(2, false));
         model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
