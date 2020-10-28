@@ -69,8 +69,9 @@ public abstract class SemanticControl {
      * 
      * @param view   a value to add to the current Values
      * @param layout the layout of the presenter buttons
+     * @param title  the title of the view, null if no title
      */
-    public abstract void addView(Views view, boolean layout);
+    public abstract void addView(Views view, boolean layout, String title);
 
     /**
      * Gets a list of all the model's views

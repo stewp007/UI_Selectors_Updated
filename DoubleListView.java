@@ -95,7 +95,7 @@ public class DoubleListView extends UiView {
     public void addButton(String label) {
         Button newButton = buttonExists(label);
         if (newButton == null) {
-            System.out.println("New Visible: " + label);
+            // System.out.println("New Visible: " + label);
             newButton = new Button(this.getButtonGroup(), SWT.CHECK);
             newButton.setText(label);
             newButton.setVisible(true);
@@ -148,7 +148,7 @@ public class DoubleListView extends UiView {
             this.setNumButtons(getNumButtons() + 1);
         } else {
             newButton.setVisible(true);
-            System.out.println("Now Visible: " + newButton.getText());
+            // System.out.println("Now Visible: " + newButton.getText());
             for (Control child : getButtonGroup().getChildren()) {
                 if (child instanceof Button && !child.isVisible()) {
                     child.moveBelow(newButton);

@@ -1,8 +1,6 @@
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-
 /**
  * @author stewartpowell Testing class
  */
@@ -15,39 +13,35 @@ public class TestMany {
      */
     public static void main(String[] args) {
 
+        // Many from N semantic control demo
+
+        /* Values to add to the model */
         List<Object> toppings = new LinkedList<>();
         toppings.add("lettuce");
         toppings.add("tomatoe");
         toppings.add("onion");
-        // toppings.add(null);
-
-        // List<Object> condiments = new LinkedList<>();
         toppings.add("ketchup");
         toppings.add("mustard");
         toppings.add("mayo");
-        // condiments.add(null);
 
+        /* Instantiate the Model and add values */
         MfromN model = new MfromN();
         model.addManyToAllValues(toppings);
-        // model.addManyToAllValues(condiments);
-        DoubleListView view = new DoubleListView(model);
-        view.setChoiceViewName("Selections: ");
-        view.getChoiceView().setGroupBackground(SWT.COLOR_DARK_CYAN);
-        // model.addView(view);
-        model.addView(view);
-        // model.addView(Views.FULL, false);
-        model.getViews().get(0).setGroupTitle("Toppings:");
-        model.getViews().get(0).setGroupBackground(SWT.COLOR_DARK_CYAN);
+
+        /* Instantiate your choice of view and set titles if applicable */
+
+        DoubleListView doubleView = new DoubleListView(model);
+        doubleView.setGroupTitle("Toppings: ");
+        doubleView.setChoiceViewName("Selections: ");
         /*
-         * model.getViews().get(1).setGroupTitle("Condiments:");
-         * model.getViews().get(1).setGroupBackground(SWT.COLOR_DARK_CYAN);
-         * 
-         * model.getViews().get(2).setGroupTitle("Order:");
-         * model.getViews().get(2).setGroupBackground(SWT.COLOR_DARK_CYAN);
+         * FullListView fullView = new FullListView(model, Views.FULL);
+         * fullView.setGroupTitle("Toppings: ");
+         * fullView.setGroupBackground(SWT.COLOR_DARK_CYAN);
          */
-        // UiController controller = new UiController(model);
-        // controller.initController();
-        // controller.updateView();
+        /* Add view to the model and start the UI */
+
+        model.addView(doubleView);
+        // model.addView(fullView);
         System.out.println("Before " + model.getCurrValue());
         model.launchUi();
         System.out.println("After " + model.getCurrValue());

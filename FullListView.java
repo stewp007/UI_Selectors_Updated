@@ -48,7 +48,7 @@ public class FullListView extends UiView {
      */
     public void initViews() {
         if ((getType() == Views.DOUBLE) && this instanceof FullListView) {
-            System.out.println("Not for this view.");
+            // System.out.println("Not for this view.");
         } else {
             for (Object value : getModel().getAllValues()) {
                 if (value != null) {
@@ -62,7 +62,7 @@ public class FullListView extends UiView {
     public void addButton(String label) {
         Button newButton = buttonExists(label);
         if (newButton == null) {
-            System.out.println("New Visible: " + label);
+            // System.out.println("New Visible: " + label);
             newButton = new Button(getButtonGroup(), SWT.CHECK);
             newButton.setText(label);
             newButton.setVisible(true);
@@ -99,14 +99,14 @@ public class FullListView extends UiView {
      * @param button the new button to add
      */
     public void addButton(Button button) {
-        System.out.println("Adding button");
+        // System.out.println("Adding button");
         if ((button.getStyle() & SWT.CHECK) != SWT.CHECK) {
             System.out.println("Invalid Button type: " + button.getStyle());
         } else {
             Button newButton = buttonExists(button.getText());
             if (newButton == null) {
                 getButtons().add(button);
-                System.out.println("Adding new new button");
+                // System.out.println("Adding new new button");
                 for (Control child : getButtonGroup().getChildren()) {
                     if (child instanceof Button && child.isVisible()) {
                         child.moveBelow(button);
@@ -114,7 +114,7 @@ public class FullListView extends UiView {
                 }
                 this.setNumButtons(getNumButtons() + 1);
             } else {
-                System.out.println("Adding new button");
+                // System.out.println("Adding new button");
                 newButton.setVisible(button.isVisible());
                 newButton.setSelection(button.getSelection());
                 newButton.setGrayed(button.getGrayed());

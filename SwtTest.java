@@ -6,9 +6,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 
 /**
  * Testing Features of SWT
@@ -22,26 +21,34 @@ public class SwtTest {
         Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
 
-        final ScrolledComposite c1 = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-        final Composite composite = new Composite(c1, SWT.BORDER);
-        composite.setLayout(new GridLayout(4, false));
+        final ScrolledComposite c1 = new ScrolledComposite(shell, SWT.V_SCROLL);
+        c1.setLayout(new GridLayout(1, false));
+
+        // c1.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_CYAN));
+        final Composite composite = new Composite(c1, SWT.NONE);
+        composite.setLayout(new GridLayout(1, false));
+        composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_CYAN));
+        Label label = new Label(composite, SWT.NONE);
+        label.setText("Test Scroll");
+        // label.pack();
+        /*
+         * for (int i = 0; i < 20; i++) { Button button = new Button(composite,
+         * SWT.PUSH); button.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
+         * false, false)); button.setText("button" + i); }
+         */
+
+        // table.setLinesVisible(true);
+        // table.setHeaderVisible(true);
         for (int i = 0; i < 20; i++) {
-            Button button = new Button(composite, SWT.PUSH);
-            button.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+            Button button = new Button(composite, SWT.CHECK);
+            button.setLayoutData(new GridData(SWT.BEGINNING, 0, false, false));
             button.setText("button" + i);
         }
-        Table table = new Table(composite, SWT.SINGLE | SWT.NO_SCROLL);
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        table.setLinesVisible(true);
-        table.setHeaderVisible(true);
-        for (int i = 0; i < 20; i++) {
-            TableItem tableItem = new TableItem(table, SWT.NONE);
-            tableItem.setText(0, "item" + i);
-        }
-        for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumn(i).pack();
-        }
-        composite.pack();
+        /*
+         * for (int i = 0; i < table.getColumnCount(); i++) { table.getColumn(i).pack();
+         * }
+         */
+        // composite.pack();
         c1.setExpandHorizontal(true);
         c1.setExpandVertical(true);
         c1.setContent(composite);
