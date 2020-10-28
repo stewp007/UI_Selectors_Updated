@@ -41,7 +41,9 @@ public class OneFromN extends SemanticControl {
     }
 
     /**
-     * @param view
+     * This function is to add views
+     * 
+     * @param view The view to be added
      */
     public void addView(UiView view) {
         if ((view.getType() == Views.RADIOB) || (view.getType() == Views.BOXB) || (view.getType() == Views.POPUP) 
@@ -52,6 +54,12 @@ public class OneFromN extends SemanticControl {
         }
     }
     
+    /**
+     * This function is to set the view name
+     * 
+     * @param number The order of the view
+     * @param name The name of the view
+     */
     public void setViewName(int number, String name) {
     	this.getViews().get(number - 1).setGroupTitle(name);
     }
