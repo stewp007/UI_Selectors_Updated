@@ -15,12 +15,13 @@ public class Presentation {
 	        OneFromN model = new OneFromN();
 	        model.addManyToAllValues(gender);
 	        
-	        BoxButtonView view = new BoxButtonView(model);
+	        RadioButtonView view = new RadioButtonView(model);
 	        view.setGroupBackground(SWT.COLOR_DARK_GRAY);
+	        
 	        model.addView(view);
 	        model.setViewName(1, "Gender");
 	        
-	        RadioButtonView view2 = new RadioButtonView(model);
+	        BoxButtonView view2 = new BoxButtonView(model);
 	        view2.setGroupBackground(SWT.COLOR_DARK_CYAN);
 	        model.addView(view2);
 	        model.setViewName(2, "Gender");
@@ -28,10 +29,6 @@ public class Presentation {
 	        System.out.println("Before " + model.getCurrValue());
 	        model.launchUi();
 	        System.out.println("After " + model.getCurrValue());
-	        
-	        
-	        
-	        
 	 }
 	 
 	 

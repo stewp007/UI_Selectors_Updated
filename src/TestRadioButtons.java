@@ -13,16 +13,22 @@ public class TestRadioButtons {
 	        
 	        OneFromN model = new OneFromN();
 	        model.addManyToAllValues(gender);
-	        BoxButtonView view = new BoxButtonView(model);
-	        model.addView(view);
-	        model.getViews().get(0).setGroupTitle("Gender:");
-	        view.setGroupBackground(SWT.COLOR_DARK_CYAN);
 	        
-	        model.addManyToAllValues(gender);
-	        RadioButtonView view2 = new RadioButtonView(model);
-	        model.addView(view2);
-	        model.getViews().get(1).setGroupTitle("Gender:");
+	        RadioButtonView view = new RadioButtonView(model);
+	        view.setGroupBackground(SWT.COLOR_DARK_GRAY);
+	        
+	        model.addView(view);
+	        model.setViewName(1, "Gender");
+	        
+	        BoxButtonView view2 = new BoxButtonView(model);
 	        view2.setGroupBackground(SWT.COLOR_DARK_CYAN);
+	        model.addView(view2);
+	        model.setViewName(2, "Gender");
+	        
+//	        PopMenuView view3 = new PopMenuView(model);
+//	        view3.setGroupBackground(SWT.COLOR_DARK_CYAN);
+//	        model.addView(view3);
+//	        model.setViewName(3, "Gender");
 	        
 	        System.out.println("Before " + model.getCurrValue());
 	        model.launchUi();
