@@ -1,5 +1,3 @@
-
-import java.awt.Color;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -31,7 +29,6 @@ public class BoxButtonView extends UiView {
      * Constructor for the Full List View class
      * 
      * @param model the model associated with the shell and display
-     * @param type  the type of view
      */
     public BoxButtonView(SemanticControl model) {
         super(model, Views.BOXB);

@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -28,7 +27,6 @@ public class PopMenuView extends UiView {
  * Constructor
  * 
  * @param model the model associated with the shell and display
- * @param type the type of view
  */
 public PopMenuView(SemanticControl model) {
 	super(model, Views.POPUP);
@@ -91,7 +89,11 @@ public void addButton(String label) {
     getButtonGroup().update();
 }
 
-
+/**
+ * Adds a new button to the presenter
+ * 
+ * @param button the new button to add
+ */
 public void addButton(Button button) {
 	System.out.println("Adding button");
     if ((button.getStyle() & SWT.RADIO) != SWT.MENU) {
