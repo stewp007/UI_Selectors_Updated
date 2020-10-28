@@ -18,8 +18,7 @@ import org.eclipse.swt.widgets.Label;
  */
 
 /**
- * @author stewartpowell The Full List of labeled Check boxes UI presenter Used
- *         for M-From-N Semantic Control
+ * @author Serena Pang
  */
 public class CheckBoxView extends UiView {
 	
