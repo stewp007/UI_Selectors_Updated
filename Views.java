@@ -22,4 +22,6 @@ public enum Views {
 	CIRCLEB,
 	/** Text box that is shows and accepts only valid value-names */
 	TEXTFIELD;
+	/** Toggle button On Off view */
+	TOGGLE;
 }
