@@ -25,10 +25,10 @@ public class OneFromN extends SemanticControl {
                 break;
             case BOXB:
                 getViews().add(new BoxButtonView(this));
-//                break;
-//            case POPUP:
-//                getViews().add(new DoubleListView(this));
-//                break;
+                break;
+            case POPUP:
+                getViews().add(new PopMenuView(this));
+                break;
 //            case CIRCLEB:
 //                getViews().add(new DoubleListView(this));
 //                break;

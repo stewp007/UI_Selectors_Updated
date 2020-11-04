@@ -45,14 +45,10 @@ public class BoxButtonView extends UiView {
      * Initializes the views of the controller
      */
     public void initViews() {
-        if ((getType() == Views.DOUBLE) && this instanceof BoxButtonView) {
-            System.out.println("Not for this view.");
-        } else {
-            for (Object value : getModel().getAllValues()) {
-                if (value != null) {
-                    addButton((String) value);
-                }
-            }
+        for (Object value : getModel().getAllValues()) {
+            if (value != null) {
+                addButton((String) value);
+            }           
         }
     }
 
@@ -72,7 +68,7 @@ public class BoxButtonView extends UiView {
                     if (source.getSelection()) {
                         getModel().getCurrValue().add(source.getText());
                         for(Button buttons : getButtons()) {
-                        	if(!buttons.getText().equals(label)) {
+                        	if(!buttons.getText().equals(label) && buttons.getSelection()) {
                         		buttons.setSelection(false);
                         		getModel().getCurrValue().remove(buttons.getText());
                         	}
@@ -95,41 +91,6 @@ public class BoxButtonView extends UiView {
         getButtonGroup().update();
     }
 
-    /**
-     * Adds a new button to the presenter
-     * 
-     * @param button the new button to add
-     */
-    public void addButton(Button button) {
-        System.out.println("Adding button");
-        if ((button.getStyle() & SWT.TOGGLE) != SWT.TOGGLE) {
-            System.out.println("Invalid Button type: " + button.getStyle());
-        } else {
-            Button newButton = buttonExists(button.getText());
-            if (newButton == null) {
-                getButtons().add(button);
-                System.out.println("Adding new new button");
-                for (Control child : getButtonGroup().getChildren()) {
-                    if (child instanceof Button && child.isVisible()) {
-                        child.moveBelow(button);
-                    }
-                }
-                this.setNumButtons(getNumButtons() + 1);
-            } else {
-                System.out.println("Adding new button");
-                newButton.setVisible(button.isVisible());
-                newButton.setSelection(button.getSelection());
-                newButton.setGrayed(button.getGrayed());
-                newButton.setEnabled(button.getEnabled());
-                for (Control child : getButtonGroup().getChildren()) {
-                    if (child instanceof Button && !child.isVisible()) {
-                        child.moveBelow(newButton);
-                    }
-                }
-            }
-            getButtonGroup().update();
-        }
-    }
 
     @Override
     public void addManyButtons(List<Object> labels) {

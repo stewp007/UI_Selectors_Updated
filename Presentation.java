@@ -24,7 +24,6 @@ public class Presentation {
 	        
 	        RadioButtonView view = new RadioButtonView(model);
 	        view.setGroupBackground(SWT.COLOR_DARK_GRAY);
-	        
 	        model.addView(view);
 	        model.setViewName(1, "Gender");
 	        
@@ -32,6 +31,11 @@ public class Presentation {
 	        view2.setGroupBackground(SWT.COLOR_DARK_CYAN);
 	        model.addView(view2);
 	        model.setViewName(2, "Gender");
+	        
+	        PopMenuView view3 = new PopMenuView(model);
+	        view3.setGroupBackground(SWT.COLOR_DARK_MAGENTA);
+	        model.addView(view3);
+	        model.setViewName(3, "Gender");
 	        
 	        System.out.println("Before " + model.getCurrValue());
 	        model.launchUi();

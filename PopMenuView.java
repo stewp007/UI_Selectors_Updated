@@ -1,6 +1,7 @@
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -22,6 +23,10 @@ public class PopMenuView extends UiView {
     private final Composite buttonGroup;
     /** The name of the group of Radio button */
     private Label groupLabel;
+    /** The menu of all labels */
+    private CCombo combo;
+    /** The previous selection */
+    private int prev;
 
 /**
  * Constructor
@@ -36,6 +41,7 @@ public PopMenuView(SemanticControl model) {
     buttonGroup.setLayout(new GridLayout(1, false));
     buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     this.groupLabel = new Label(buttonGroup, SWT.NONE);
+    
     initViews();
 }
 
@@ -43,87 +49,38 @@ public PopMenuView(SemanticControl model) {
  * Initializes the views of the controller
  */
 public void initViews() {
-    if ((getType() == Views.DOUBLE) && this instanceof PopMenuView) {
-        System.out.println("Not for this view.");
-    } else {
-        for (Object value : getModel().getAllValues()) {
-            if (value != null) {
-                addButton((String) value);
-            }
-        }
-    }
+	combo = new CCombo(getButtonGroup(), SWT.READ_ONLY);
+	prev = -1;
+	addButton("Select one");
 }
 
 @Override
 public void addButton(String label) {
-    Button newButton = buttonExists(label);
-    if (newButton == null) {
-        System.out.println("New Visible: " + label);
-        newButton = new Button(getButtonGroup(), SWT.MENU);
-        newButton.setText(label);
-        newButton.setVisible(true);
-        newButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button source = (Button) e.getSource();
-                if (source.getSelection()) {
-                    getModel().getCurrValue().add(source.getText());
-                } else {
-                    getModel().getCurrValue().remove(source.getText());
+	combo.setText(label);
+	
+    for (Object value : getModel().getAllValues()) {
+        if (value != null) {
+        	combo.add(value.toString());
+        }
+    }
+	
+	combo.addSelectionListener(new SelectionAdapter() {
+		
+        @Override
+        public void widgetSelected(SelectionEvent e) {
+        	int index = combo.getSelectionIndex();
+            if (index > -1) {
+                getModel().getCurrValue().add(combo.getItem(index));
+                
+                if(prev != -1) {
+                	getModel().getCurrValue().remove(combo.getItem(prev));
                 }
-            }
-        });
-        this.getButtons().add(newButton);
-        this.setNumButtons(getNumButtons() + 1);
-    } else {
-        newButton.setVisible(true);
-        System.out.println("Now Visible: " + newButton.getText());
-        for (Control child : getButtonGroup().getChildren()) {
-            if (child instanceof Button && !child.isVisible()) {
-                child.moveBelow(newButton);
+                
+                prev = index;
             }
         }
-
-    }
+    });
     getButtonGroup().update();
-}
-
-/**
- * Adds a new button to the presenter
- * 
- * @param button the new button to add
- */
-public void addButton(Button button) {
-	System.out.println("Adding button");
-    if ((button.getStyle() & SWT.RADIO) != SWT.MENU) {
-        System.out.println("Invalid Button type: " + button.getStyle());
-    } else {
-        Button newButton = buttonExists(button.getText());
-        if (newButton == null) {
-            getButtons().add(button);
-            System.out.println("Adding new new button");
-            for (Control child : getButtonGroup().getChildren()) {
-                if (child instanceof Button && child.isVisible()) {
-                    child.moveBelow(button);
-                }
-            }
-            this.setNumButtons(getNumButtons() + 1);
-        } else {
-            System.out.println("Adding new button");
-            newButton.setVisible(button.isVisible());
-            newButton.setSelection(button.getSelection());
-            newButton.setGrayed(button.getGrayed());
-            newButton.setEnabled(button.getEnabled());
-            for (Control child : getButtonGroup().getChildren()) {
-                if (child instanceof Button && !child.isVisible()) {
-                    child.moveBelow(newButton);
-                }
-            }
-        }
-        getButtonGroup().update();
-    }
-
 }
 
 @Override
