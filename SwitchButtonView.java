@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 
 public class SwitchButtonView extends UiView {
@@ -24,6 +25,7 @@ public class SwitchButtonView extends UiView {
 	    private Label groupLabel;
 	    
 	    Display display;
+	    Shell shell;
 
 	    /**
 	     * Constructor for the Full List View class
@@ -32,15 +34,17 @@ public class SwitchButtonView extends UiView {
 	     */
 	    public SwitchButtonView(SemanticControl model) {
 	        super(model, Views.TOGGLE);
-	        model.getShell().setLayout(new GridLayout(2, false));
+	        model.getShell().setLayout(new GridLayout(1, true));
 	        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	        this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
-	        buttonGroup.setLayout(new GridLayout(1, false));
+	        buttonGroup.setLayout(new GridLayout(1, true));
 	        buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	 
 	       
-	        this.groupLabel = new Label(buttonGroup, SWT.NONE);
+	        this.groupLabel = new Label(model.getShell(), SWT.NONE);
 	        display = model.getDisplay();
+	        shell = model.getShell();
+	        
 	        
 	        initViews();
 	    }
@@ -53,6 +57,15 @@ public class SwitchButtonView extends UiView {
 	    public Display getDisplay() {
 	        return display;
 	    }
+	    
+	    /**
+	     * Gets the Shell of the UI presenter
+	     * 
+	     * @return the shell of the UI presenter
+	     */
+	    public Shell getSell() {
+	        return shell;
+	    }
 
 	    /**
 	     * Initializes the views of the controller
@@ -62,13 +75,16 @@ public class SwitchButtonView extends UiView {
 	            System.out.println("Not for this view.");
 	        } else {
 	            for (Object value : getModel().getAllValues()) {
+	            	   	            
 	                if (value != null) {
+	                	
+	                	    	            
 	                    addButton((String) value);
 	                }
 	            }
 	        }
 	    }
-
+	    
 	    @Override
 	    public void addButton(String label) {
 	        Button currentButton = buttonExists(label);
@@ -76,25 +92,35 @@ public class SwitchButtonView extends UiView {
 	        Image iconSelect = MyImageUtils.getImage(display, "/button_image/t_on.jpg");
             Image iconDeselect = MyImageUtils.getImage(display, "/button_image/t_off.jpg");
      
+     
 	        if (currentButton == null) {
 	            System.out.println("Creating New Button: " + label);
-	            
-	            
-	            final Button newButton = new Button(getButtonGroup(), SWT.TOGGLE);            
+	                        
+	            final Button newButton = new Button(shell, SWT.TOGGLE);            
 	            newButton.setText(label);
-	                      
+	        	           	                      
 	            newButton.setVisible(true);
+	            
+	            Label groupLabel = new Label(shell, SWT.BORDER);
+	            groupLabel.setText(label);
+	            
+	            shell.pack();
+            
 	            newButton.addSelectionListener(new SelectionAdapter() {
 
+	            	
 	                @Override
 	                public void widgetSelected(SelectionEvent e) {
 	                    Button source = (Button) e.getSource();
 	                    if (source.getSelection()) {
+	                    		                    	        	            
 	                    	newButton.setImage(iconSelect);
 	                        getModel().getCurrValue().add(source.getText());
+	                        	                    	        	            
 	                        System.out.println("Group " + source.getText() + " now CAN see your posts ");
 	                    } else {
 	                    	newButton.setImage(iconDeselect);
+	                    	 
 	                        getModel().getCurrValue().remove(source.getText());
 	                        System.out.println("Group " + source.getText() + " now CAN NOT see your posts ");
 	                    }
@@ -107,7 +133,7 @@ public class SwitchButtonView extends UiView {
 	            System.out.println("Now Visible: " + currentButton.getText());
 	            for (Control child : getButtonGroup().getChildren()) {
 	                if (child instanceof Button && !child.isVisible()) {
-	                    child.moveBelow(currentButton);
+	                    //child.moveBelow(currentButton);
 	                }
 	            }
 
@@ -153,8 +179,13 @@ public class SwitchButtonView extends UiView {
 
 	    @Override
 	    public void addManyButtons(List<Object> labels) {
+	    	
+	    	
 	        for (int i = 0; i < labels.size(); i++) {
 	            addButton((String) labels.get(i));
+	            
+	            
+	            
 	        }
 	    }
 
