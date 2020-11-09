@@ -34,8 +34,8 @@ public class FullListView extends UiView {
      */
     public FullListView(SemanticControl model, Views type) {
         super(model, type);
-        model.getShell().setLayout(new GridLayout(2, false));
-        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        // model.getShell().setLayout(new GridLayout(2, false));
+        // model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
         buttonGroup.setLayout(new GridLayout(1, false));
         buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -76,6 +76,7 @@ public class FullListView extends UiView {
                     } else {
                         getModel().getCurrValue().remove(source.getText());
                     }
+                    getModel().updateViews();
                 }
             });
             this.getButtons().add(newButton);
@@ -127,6 +128,7 @@ public class FullListView extends UiView {
             }
             getButtonGroup().update();
         }
+        // this.getModel().updateViews();
     }
 
     @Override
@@ -151,6 +153,7 @@ public class FullListView extends UiView {
 
             }
         }
+        this.getModel().updateViews();
     }
 
     /**
@@ -197,5 +200,28 @@ public class FullListView extends UiView {
      */
     public void setGroupBackground(int color) {
         getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
+    }
+
+    @Override
+    public void updateView(List<Object> currValues) {
+        if (currValues.size() == 0) {
+            for (Button button : getButtons()) {
+                button.setSelection(false);
+            }
+        } else {
+            for (Object label : currValues) {
+                String text = (String) label;
+                System.out.println("Updating view: " + text);
+                for (Button button : getButtons()) {
+                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                        button.setSelection(true);
+
+                    } else {
+                        button.setSelection(false);
+                    }
+                }
+            }
+        }
+
     }
 }
