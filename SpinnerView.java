@@ -1,0 +1,122 @@
+import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
+
+import java.util.List;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
+
+/**
+ * @author stewartpowell
+ *
+ */
+public class SpinnerView extends UiView {
+    /** The SWT widget for a spinner */
+    private final Spinner spinner;
+    /** The label of the spinner */
+    private final Label spinLabel;
+    /** The group containing the label and the spinner */
+    private final Composite spinGroup;
+
+    /**
+     * The constructor for SpinnerView
+     * 
+     * @param model    the model associated with this view
+     * @param minValue the min value of range
+     * @param maxValue the max value of range
+     * @param type     the type of view
+     */
+    public SpinnerView(ValueInRange model, int minValue, int maxValue, Views type) {
+        super(model, type);
+        this.spinGroup = new Composite(model.getShell(), SWT.NONE);
+        this.spinLabel = new Label(spinGroup, SWT.NONE);
+        this.spinner = new Spinner(spinGroup, SWT.BORDER);
+
+        spinGroup.setLayout(new GridLayout(1, false));
+        spinGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        spinner.setValues(0, minValue, maxValue, 0, 1, 10);
+        spinner.addModifyListener(e -> {
+            String string = spinner.getText();
+            String message = null;
+            try {
+                int value = Integer.parseInt(string);
+            } catch (Exception ex) {
+                message = "Current input is not numeric";
+            }
+            if (message != null) {
+                spinner.setForeground(model.getDisplay().getSystemColor(SWT.COLOR_RED));
+                GC gc = new GC(spinner);
+                gc.dispose();
+            } else {
+                spinner.setForeground(null);
+            }
+        });
+        spinner.addSelectionListener(widgetSelectedAdapter(e -> {
+            int selection = spinner.getSelection();
+            model.setCurrentValue(selection);
+            model.addCurrValue(selection);
+            System.out.println("Selection is " + selection);
+        }));
+    }
+
+    @Override
+    public void setGroupTitle(String title) {
+        this.spinLabel.setText(title);
+    }
+
+    @Override
+    public void addButton(String label) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void removeButton(String label) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void addManyButtons(List<Object> labels) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void updateView(List<Object> currValues) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * Gets the Spinner
+     * 
+     * @return the spinner
+     */
+    public Spinner getSpinner() {
+        return spinner;
+    }
+
+    /**
+     * Gets the Spin Label
+     * 
+     * @return the spinLabel
+     */
+    public Label getSpinLabel() {
+        return spinLabel;
+    }
+
+    /**
+     * Gets the spinGroup
+     * 
+     * @return the spinGroup
+     */
+    public Composite getSpinGroup() {
+        return spinGroup;
+    }
+
+}
