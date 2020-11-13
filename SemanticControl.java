@@ -29,13 +29,16 @@ public abstract class SemanticControl {
 
     /**
      * Constructor for Semantic Control
+     * 
+     * @param display the display used to display the presenters
+     * @param shell   the shell used to output the Ui
      */
-    public SemanticControl() {
+    public SemanticControl(Display display, Shell shell) {
         this.allValues = new LinkedList<>();
         this.currValue = new LinkedList<>();
         this.views = new LinkedList<>();
-        this.display = new Display();
-        this.shell = new Shell(display);
+        this.display = display;
+        this.shell = shell;
         this.shell.setLayout(new GridLayout(2, false));
         this.shell.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
     }
@@ -100,8 +103,9 @@ public abstract class SemanticControl {
      * Updates the View when the CurrValues of Model are changed
      */
     public void updateViews() {
-        System.out.println("Updating");
+
         for (UiView view : views) {
+            System.out.println("Updating: " + view);
             view.updateView(currValue);
         }
     }
@@ -176,19 +180,4 @@ public abstract class SemanticControl {
     public void openShell() {
         this.getShell().open();
     }
-
-    /**
-     * Opens the Shell and displays the Presenters until exited
-     */
-    public void launchUi() {
-        shell.pack();
-        shell.open();
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
-        display.dispose();
-    }
-
 }

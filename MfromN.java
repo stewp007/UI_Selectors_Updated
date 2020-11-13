@@ -1,3 +1,6 @@
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
 /**
  * 
  */
@@ -10,9 +13,12 @@ public class MfromN extends SemanticControl {
 
     /**
      * Constructor for MfromN Model
+     * 
+     * @param display the display for the presenters
+     * @param shell   the shell for the presenters
      */
-    public MfromN() {
-        super();
+    public MfromN(Display display, Shell shell) {
+        super(display, shell);
     }
 
     /**
