@@ -3,7 +3,6 @@ import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -19,6 +18,8 @@ public class SpinnerView extends UiView {
     private final Spinner spinner;
     /** The label of the spinner */
     private final Label spinLabel;
+    /** The value in range model */
+    private final ValueInRange model;
     /** The group containing the label and the spinner */
     private final Composite spinGroup;
 
@@ -32,6 +33,7 @@ public class SpinnerView extends UiView {
      */
     public SpinnerView(ValueInRange model, int minValue, int maxValue, Views type) {
         super(model, type);
+        this.model = model;
         this.spinGroup = new Composite(model.getShell(), SWT.NONE);
         this.spinLabel = new Label(spinGroup, SWT.NONE);
         this.spinner = new Spinner(spinGroup, SWT.BORDER);
@@ -39,22 +41,29 @@ public class SpinnerView extends UiView {
         spinGroup.setLayout(new GridLayout(1, false));
         spinGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         spinner.setValues(0, minValue, maxValue, 0, 1, 10);
+
         spinner.addModifyListener(e -> {
+            int prevSel = spinner.getSelection();
             String string = spinner.getText();
             String message = null;
             try {
                 int value = Integer.parseInt(string);
+                if (value > maxValue) {
+                    message = "Current input is greater than maximum";
+                } else if (value < minValue) {
+                    message = "Current input is less than minimum";
+                }
             } catch (Exception ex) {
                 message = "Current input is not numeric";
             }
             if (message != null) {
                 spinner.setForeground(model.getDisplay().getSystemColor(SWT.COLOR_RED));
-                GC gc = new GC(spinner);
-                gc.dispose();
+                spinner.setSelection(prevSel);
             } else {
                 spinner.setForeground(null);
             }
         });
+
         spinner.addSelectionListener(widgetSelectedAdapter(e -> {
             int selection = spinner.getSelection();
             model.setCurrentValue(selection);
@@ -69,27 +78,17 @@ public class SpinnerView extends UiView {
     }
 
     @Override
-    public void addButton(String label) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void removeButton(String label) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void addManyButtons(List<Object> labels) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void updateView(List<Object> currValues) {
-        // TODO Auto-generated method stub
+        updateView(model.getCurrentValue());
+    }
 
+    /**
+     * Updates the current selection with the new value
+     * 
+     * @param newValue the new updated value
+     */
+    public void updateView(int newValue) {
+        spinner.setSelection(newValue);
     }
 
     /**
@@ -117,6 +116,18 @@ public class SpinnerView extends UiView {
      */
     public Composite getSpinGroup() {
         return spinGroup;
+    }
+
+    @Override
+    public void addButton(String label) {
+    }
+
+    @Override
+    public void removeButton(String label) {
+    }
+
+    @Override
+    public void addManyButtons(List<Object> labels) {
     }
 
 }
