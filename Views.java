@@ -11,5 +11,10 @@ public enum Views {
     /** Array of labeled checkboxes */
     CHECK,
     /** Two Full List views: one for selections, one for choices */
-    DOUBLE;
+    DOUBLE,
+    /** A number box of a restricted range */
+    NUMBER,
+    /** A spinner with a set range */
+    SPINNER;
+
 }
