@@ -25,8 +25,6 @@ public class PopMenuView extends UiView {
     private Label groupLabel;
     /** The menu of all labels */
     private CCombo combo;
-    /** The previous selection */
-    private int prev;
 
 /**
  * Constructor
@@ -50,7 +48,6 @@ public PopMenuView(SemanticControl model) {
  */
 public void initViews() {
 	combo = new CCombo(getButtonGroup(), SWT.READ_ONLY);
-	prev = -1;
 	addButton("Select one");
 }
 
@@ -69,18 +66,16 @@ public void addButton(String label) {
         @Override
         public void widgetSelected(SelectionEvent e) {
         	int index = combo.getSelectionIndex();
+        	getModel().getCurrValue().clear();;
+        	
             if (index > -1) {
                 getModel().getCurrValue().add(combo.getItem(index));
-                
-                if(prev != -1) {
-                	getModel().getCurrValue().remove(combo.getItem(prev));
-                }
-                
-                prev = index;
+                getModel().updateViews();
             }
         }
     });
     getButtonGroup().update();
+    
 }
 
 @Override
@@ -143,6 +138,22 @@ public void setGroupLabel(Label label) {
 public void setGroupTitle(String title) {
     this.groupLabel.setText(title);
 }
+
+@Override
+public void updateView(List<Object> currValues) {
+	int comboIndex = -1;
+	
+    if (currValues.size() != 0) {
+    	combo.deselectAll();
+    	for (Object value : getModel().getAllValues()) {
+    		comboIndex++;
+            if (value.toString().equals(currValues.get(0))) {
+            	combo.select(comboIndex);
+            }
+        }
+    }
+}
+
 
 /**
  * Adds a colored background to the group of buttons

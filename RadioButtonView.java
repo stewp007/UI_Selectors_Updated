@@ -65,9 +65,11 @@ public void addButton(String label) {
                 Button source = (Button) e.getSource();
                 if (source.getSelection()) {
                     getModel().getCurrValue().add(source.getText());
+                    getModel().updateViews();
                 } else {
                     getModel().getCurrValue().remove(source.getText());
                 }
+                
             }
         });
         this.getButtons().add(newButton);
@@ -107,6 +109,8 @@ public void removeButton(String label) {
 
         }
     }
+    
+    this.getModel().updateViews();
 }
 
 /**
@@ -146,6 +150,29 @@ public void setGroupTitle(String title) {
     this.groupLabel.setText(title);
 }
 
+@Override
+public void updateView(List<Object> currValues) {
+    if (currValues.size() == 0) {
+        for (Button button : getButtons()) {
+            button.setSelection(false);
+        }
+    } else {
+        for (Object label : currValues) {
+            String text = (String) label;
+            System.out.println("Updating view: " + text);
+            for (Button button : getButtons()) {
+                if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                    button.setSelection(true);
+
+                } else {
+                    button.setSelection(false);
+                }
+            }
+        }
+    }
+
+}
+
 /**
  * Adds a colored background to the group of buttons
  * 
@@ -154,6 +181,7 @@ public void setGroupTitle(String title) {
 public void setGroupBackground(int color) {
     getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
 }
+
 
 
 }

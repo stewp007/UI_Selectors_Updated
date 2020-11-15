@@ -73,6 +73,7 @@ public class BoxButtonView extends UiView {
                         		getModel().getCurrValue().remove(buttons.getText());
                         	}
                         }
+                        getModel().updateViews();
                     } 
                 }
             });
@@ -114,6 +115,8 @@ public class BoxButtonView extends UiView {
 
             }
         }
+        
+        this.getModel().updateViews();
     }
 
     /**
@@ -153,6 +156,29 @@ public class BoxButtonView extends UiView {
         this.groupLabel.setText(title);
     }
 
+    @Override
+    public void updateView(List<Object> currValues) {
+        if (currValues.size() == 0) {
+            for (Button button : getButtons()) {
+                button.setSelection(false);
+            }
+        } else {
+            for (Object label : currValues) {
+                String text = (String) label;
+                System.out.println("Updating view: " + text);
+                for (Button button : getButtons()) {
+                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                        button.setSelection(true);
+
+                    } else {
+                        button.setSelection(false);
+                    }
+                }
+            }
+        }
+    }
+
+    
     /**
      * Adds a colored background to the group of buttons
      * 
