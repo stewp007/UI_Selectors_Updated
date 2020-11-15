@@ -16,8 +16,7 @@ import org.eclipse.swt.widgets.Label;
  */
 
 /**
- * @author stewartpowell The Full List of labeled Check boxes UI presenter Used
- *         for M-From-N Semantic Control
+ * @author Will
  */
 public class BoxButtonView extends UiView {
     /** The group of buttons in the scrollable group */
@@ -54,41 +53,29 @@ public class BoxButtonView extends UiView {
 
     @Override
     public void addButton(String label) {
-        Button newButton = buttonExists(label);
-        if (newButton == null) {
-            System.out.println("New Visible: " + label);
-            newButton = new Button(getButtonGroup(), SWT.TOGGLE);
-            newButton.setText(label);
-            newButton.setVisible(true);
-            newButton.addSelectionListener(new SelectionAdapter() {
+        Button newButton = new Button(getButtonGroup(), SWT.TOGGLE);
+        newButton.setText(label);
+        newButton.setVisible(true);
+        newButton.addSelectionListener(new SelectionAdapter() {
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    Button source = (Button) e.getSource();
-                    if (source.getSelection()) {
-                        getModel().getCurrValue().add(source.getText());
-                        for(Button buttons : getButtons()) {
-                        	if(!buttons.getText().equals(label) && buttons.getSelection()) {
-                        		buttons.setSelection(false);
-                        		getModel().getCurrValue().remove(buttons.getText());
-                        	}
-                        }
-                        getModel().updateViews();
-                    } 
-                }
-            });
-            this.getButtons().add(newButton);
-            this.setNumButtons(getNumButtons() + 1);
-        } else {
-            newButton.setVisible(true);
-            System.out.println("Now Visible: " + newButton.getText());
-            for (Control child : getButtonGroup().getChildren()) {
-                if (child instanceof Button && !child.isVisible()) {
-                    child.moveBelow(newButton);
-                }
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Button source = (Button) e.getSource();
+                if (source.getSelection()) {
+                    getModel().getCurrValue().add(source.getText());
+                    for(Button buttons : getButtons()) {
+                    	if(!buttons.getText().equals(label) && buttons.getSelection()) {
+                    		buttons.setSelection(false);
+                    		getModel().getCurrValue().remove(buttons.getText());
+                    	}
+                    }
+                    getModel().updateViews();
+                } 
             }
+        });
+        this.getButtons().add(newButton);
+        this.setNumButtons(getNumButtons() + 1);
 
-        }
         getButtonGroup().update();
     }
 

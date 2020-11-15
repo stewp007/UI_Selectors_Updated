@@ -26,13 +26,15 @@ public abstract class SemanticControl {
 
     /**
      * Constructor for Semantic Control
+     * @param display the display used with all the Ui Components
+     * @param shell   the Shell used with all the Ui components 
      */
-    public SemanticControl() {
+    public SemanticControl(Display display, Shell shell) {
         this.allValues = new LinkedList<>();
         this.currValue = new LinkedList<>();
         this.views = new LinkedList<>();
-        this.display = new Display();
-        this.shell = new Shell(display);
+        this.display = display;
+        this.shell =shell;
     }
 
     /**
@@ -170,19 +172,4 @@ public abstract class SemanticControl {
     public void openShell() {
         this.getShell().open();
     }
-
-    /**
-     * Opens the Shell and displays the Presenters until exited
-     */
-    public void launchUi() {
-        shell.pack();
-        shell.open();
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
-        display.dispose();
-    }
-
 }

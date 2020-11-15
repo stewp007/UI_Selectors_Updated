@@ -1,3 +1,6 @@
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
 /**
  * @author Will
  *
@@ -6,9 +9,11 @@ public class OneFromN extends SemanticControl {
 
     /**
      * Constructor
+     * @param display the display used with all the Ui Components
+     * @param shell   the Shell used with all the Ui components
      */
-    public OneFromN() {
-        super();
+    public OneFromN(Display display, Shell shell) {
+        super(display, shell);
     }
 
     /**
