@@ -15,6 +15,8 @@ public enum Views {
     /** A number box of a restricted range */
     NUMBER,
     /** A spinner with a set range */
-    SPINNER;
+    SPINNER,
+    /** A slider with a set range */
+    SLIDER;
 
 }
