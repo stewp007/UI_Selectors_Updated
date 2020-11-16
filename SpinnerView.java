@@ -29,15 +29,16 @@ public class SpinnerView extends UiView {
      * @param model    the model associated with this view
      * @param minValue the min value of range
      * @param maxValue the max value of range
+     * @param title    the title of the model
      * @param type     the type of view
      */
-    public SpinnerView(ValueInRange model, int minValue, int maxValue, Views type) {
+    public SpinnerView(ValueInRange model, int minValue, int maxValue, String title, Views type) {
         super(model, type);
         this.model = model;
         this.spinGroup = new Composite(model.getShell(), SWT.NONE);
         this.spinLabel = new Label(spinGroup, SWT.NONE);
         this.spinner = new Spinner(spinGroup, SWT.BORDER);
-
+        spinLabel.setText(title);
         spinGroup.setLayout(new GridLayout(1, false));
         spinGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         spinner.setValues(0, minValue, maxValue, 0, 1, 10);
@@ -61,6 +62,7 @@ public class SpinnerView extends UiView {
                 spinner.setSelection(prevSel);
             } else {
                 spinner.setForeground(null);
+                // model.updateViews();
             }
         });
 
@@ -68,6 +70,7 @@ public class SpinnerView extends UiView {
             int selection = spinner.getSelection();
             model.setCurrentValue(selection);
             model.addCurrValue(selection);
+            model.updateViews();
             System.out.println("Selection is " + selection);
         }));
     }
