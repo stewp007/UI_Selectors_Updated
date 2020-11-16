@@ -33,16 +33,30 @@ public class ValueInRange extends SemanticControl {
     public void addView(Views view, boolean layout, String title) {
         switch (view) {
             case SPINNER:
-                SpinnerView spinView = new SpinnerView(this, 0, 100, Views.FULL);
-                if (!title.equals(null)) {
-                    spinView.setGroupTitle(title);
-                }
+                SpinnerView spinView = new SpinnerView(this, getMinValue(), getMaxValue(), title, Views.SPINNER);
                 getViews().add(spinView);
+                break;
+            case SLIDER:
+                SliderView slideView = new SliderView(this, getMinValue(), getMaxValue(), title, title, Views.SLIDER);
+                getViews().add(slideView);
                 break;
             default:
                 System.out.println("Error: Incapatable view selected: " + view);
         }
 
+    }
+
+    /**
+     * Adds a UiView object to the list views of this presenter
+     * 
+     * @param view the new view to add to the model
+     */
+    public void addView(UiView view) {
+        if ((view.getType() == Views.SLIDER) || (view.getType() == Views.SPINNER)) {
+            getViews().add(view);
+        } else {
+            System.out.println("Error: Non-valid view");
+        }
     }
 
     /**
