@@ -72,6 +72,7 @@ public class ToggleButtonView extends UiView {
 	                        getModel().getCurrValue().remove(source.getText());
 	                        System.out.println("Group " + source.getText() + " now CAN NOT see your posts ");
 	                    }
+	                    getModel().updateViews();
 	                }
 	            });
 	            this.getButtons().add(newButton);
@@ -147,6 +148,7 @@ public class ToggleButtonView extends UiView {
 
 	            }
 	        }
+	        this.getModel().updateViews();
 	    }
 
 	    /**
@@ -194,6 +196,30 @@ public class ToggleButtonView extends UiView {
 	    public void setGroupBackground(int color) {
 	        getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
 	    }
+
+		@Override
+		public void updateView(List<Object> currValues) {
+			 if (currValues.size() == 0) {
+		            for (Button button : getButtons()) {
+		                button.setSelection(false);
+		            }
+		        } else {
+		            for (Object label : currValues) {
+		                String text = (String) label;
+		                System.out.println("Updating view: " + text);
+		                for (Button button : getButtons()) {
+		                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+		                        button.setSelection(true);
+
+		                    } else {
+		                        button.setSelection(false);
+		                    }
+		                }
+		            }
+		        }
+
+			
+		}
 	}
 
 

@@ -7,6 +7,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -14,7 +15,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-
+import org.eclipse.swt.graphics.Point;
 
 public class SwitchButtonView extends UiView {
 	
@@ -37,10 +38,23 @@ public class SwitchButtonView extends UiView {
 	        model.getShell().setLayout(new GridLayout(1, true));
 	        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	        this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
+	      
 	        buttonGroup.setLayout(new GridLayout(1, true));
 	        buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-	 
-	       
+//	        
+//	        GridData gridData = new GridData();
+//	        gridData.verticalAlignment = GridData.FILL;
+//	        
+//	        gridData = new GridData();
+//	        gridData.verticalAlignment = GridData.FILL;
+//	        gridData.verticalSpan = 2;
+//	        gridData.grabExcessVerticalSpace = true;
+//	        gridData.horizontalAlignment = GridData.FILL;
+//	        gridData.grabExcessHorizontalSpace = true;
+//	        gridData.widthHint = 80;
+//	        gridData.heightHint = 80;
+//	        buttonGroup.setLayoutData(gridData);
+//	       
 	        this.groupLabel = new Label(model.getShell(), SWT.NONE);
 	        display = model.getDisplay();
 	        shell = model.getShell();
@@ -89,14 +103,19 @@ public class SwitchButtonView extends UiView {
 	    public void addButton(String label) {
 	        Button currentButton = buttonExists(label);
 	        
-	        Image iconSelect = MyImageUtils.getImage(display, "/button_image/t_on.jpg");
-            Image iconDeselect = MyImageUtils.getImage(display, "/button_image/t_off.jpg");
+	       // Image iconSelect = MyImageUtils.getImage(display, "/button_image/t_on.jpg");
+            //Image iconDeselect = MyImageUtils.getImage(display, "/button_image/t_off.jpg");
+            
+            Image iconSelect = MyImageUtils.getImage(display, "/button_image/on.jpeg");
+            Image iconDeselect = MyImageUtils.getImage(display, "/button_image/off.jpeg");
      
      
 	        if (currentButton == null) {
 	            System.out.println("Creating New Button: " + label);
 	                        
-	            final Button newButton = new Button(shell, SWT.TOGGLE);            
+	            final Button newButton = new Button(shell, SWT.TOGGLE);    
+	            newButton.setSize(new Point(200,20));
+
 	            newButton.setText(label);
 	        	           	                      
 	            newButton.setVisible(true);
@@ -124,6 +143,7 @@ public class SwitchButtonView extends UiView {
 	                        getModel().getCurrValue().remove(source.getText());
 	                        System.out.println("Group " + source.getText() + " now CAN NOT see your posts ");
 	                    }
+	                    getModel().updateViews();
 	                }
 	            });
 	            this.getButtons().add(newButton);
@@ -204,6 +224,7 @@ public class SwitchButtonView extends UiView {
 
 	            }
 	        }
+	        this.getModel().updateViews();
 	    }
 
 	    /**
@@ -251,6 +272,28 @@ public class SwitchButtonView extends UiView {
 	    public void setGroupBackground(int color) {
 	        getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
 	    }
+
+		@Override
+		public void updateView(List<Object> currValues) {
+			 if (currValues.size() == 0) {
+		            for (Button button : getButtons()) {
+		                button.setSelection(false);
+		            }
+		        } else {
+		            for (Object label : currValues) {
+		                String text = (String) label;
+		                System.out.println("Updating view: " + text);
+		                for (Button button : getButtons()) {
+		                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+		                        button.setSelection(true);
+
+		                    } else {
+		                        button.setSelection(false);
+		                    }
+		                }
+		            }
+		      }
+		}
 	}
 
 
