@@ -2,4 +2,4 @@
 A new library of Semantic Control based UI tools. 
 
 TODO: Add more documentation.
-TODO: Git on Eclipse
+

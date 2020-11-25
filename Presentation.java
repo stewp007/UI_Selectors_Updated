@@ -3,8 +3,15 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 
+/**
+ * This class is to test all presenters
+ */
 public class Presentation {
 
+	/**
+	 * Main
+	 * @param args arguments
+	 */
 	 public static void main(String[] args) {
 
 	        List<Object> gender = new LinkedList<>();

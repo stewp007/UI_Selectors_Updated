@@ -33,8 +33,8 @@ public class FullListView extends UiView {
      */
     public FullListView(SemanticControl model, Views type) {
         super(model, type);
-        model.getShell().setLayout(new GridLayout(2, false));
-        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        // model.getShell().setLayout(new GridLayout(2, false));
+        // model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
         buttonGroup.setLayout(new GridLayout(1, false));
         buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -47,7 +47,7 @@ public class FullListView extends UiView {
      */
     public void initViews() {
         if ((getType() == Views.DOUBLE) && this instanceof FullListView) {
-            System.out.println("Not for this view.");
+            // System.out.println("Not for this view.");
         } else {
             for (Object value : getModel().getAllValues()) {
                 if (value != null) {
@@ -61,7 +61,7 @@ public class FullListView extends UiView {
     public void addButton(String label) {
         Button newButton = buttonExists(label);
         if (newButton == null) {
-            System.out.println("New Visible: " + label);
+            // System.out.println("New Visible: " + label);
             newButton = new Button(getButtonGroup(), SWT.CHECK);
             newButton.setText(label);
             newButton.setVisible(true);
@@ -75,6 +75,7 @@ public class FullListView extends UiView {
                     } else {
                         getModel().getCurrValue().remove(source.getText());
                     }
+                    getModel().updateViews();
                 }
             });
             this.getButtons().add(newButton);
@@ -98,14 +99,14 @@ public class FullListView extends UiView {
      * @param button the new button to add
      */
     public void addButton(Button button) {
-        System.out.println("Adding button");
+        // System.out.println("Adding button");
         if ((button.getStyle() & SWT.CHECK) != SWT.CHECK) {
             System.out.println("Invalid Button type: " + button.getStyle());
         } else {
             Button newButton = buttonExists(button.getText());
             if (newButton == null) {
                 getButtons().add(button);
-                System.out.println("Adding new new button");
+                // System.out.println("Adding new new button");
                 for (Control child : getButtonGroup().getChildren()) {
                     if (child instanceof Button && child.isVisible()) {
                         child.moveBelow(button);
@@ -113,7 +114,7 @@ public class FullListView extends UiView {
                 }
                 this.setNumButtons(getNumButtons() + 1);
             } else {
-                System.out.println("Adding new button");
+                // System.out.println("Adding new button");
                 newButton.setVisible(button.isVisible());
                 newButton.setSelection(button.getSelection());
                 newButton.setGrayed(button.getGrayed());
@@ -126,6 +127,7 @@ public class FullListView extends UiView {
             }
             getButtonGroup().update();
         }
+        // this.getModel().updateViews();
     }
 
     @Override
@@ -150,6 +152,7 @@ public class FullListView extends UiView {
 
             }
         }
+        this.getModel().updateViews();
     }
 
     /**
@@ -196,5 +199,28 @@ public class FullListView extends UiView {
      */
     public void setGroupBackground(int color) {
         getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
+    }
+
+    @Override
+    public void updateView(List<Object> currValues) {
+        if (currValues.size() == 0) {
+            for (Button button : getButtons()) {
+                button.setSelection(false);
+            }
+        } else {
+            for (Object label : currValues) {
+                String text = (String) label;
+                System.out.println("Updating view: " + text);
+                for (Button button : getButtons()) {
+                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                        button.setSelection(true);
+
+                    } else {
+                        button.setSelection(false);
+                    }
+                }
+            }
+        }
+
     }
 }

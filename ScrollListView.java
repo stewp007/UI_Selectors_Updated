@@ -82,6 +82,7 @@ public class ScrollListView extends UiView {
                     } else {
                         getModel().getCurrValue().remove(source.getText());
                     }
+                    getModel().updateViews();
                 }
             });
             this.getButtons().add(newButton);
@@ -98,6 +99,7 @@ public class ScrollListView extends UiView {
         }
         getButtonGroup().update();
         getScrollGroup().update();
+        // this.getModel().updateViews();
     }
 
     @Override
@@ -122,6 +124,7 @@ public class ScrollListView extends UiView {
 
             }
         }
+        this.getModel().updateViews();
     }
 
     /**
@@ -177,6 +180,28 @@ public class ScrollListView extends UiView {
     @Override
     public void setGroupTitle(String title) {
         this.groupLabel.setText(title);
+    }
+
+    @Override
+    public void updateView(List<Object> currValues) {
+        if (currValues.size() == 0) {
+            for (Button button : getButtons()) {
+                button.setSelection(false);
+            }
+        } else {
+            for (Object label : currValues) {
+                String text = (String) label;
+                System.out.println("Updating view: " + text);
+                for (Button button : getButtons()) {
+                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                        button.setSelection(true);
+
+                    } else {
+                        button.setSelection(false);
+                    }
+                }
+            }
+        }
     }
 
 }
