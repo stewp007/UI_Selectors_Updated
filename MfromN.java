@@ -1,3 +1,6 @@
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
 /**
  * 
  */
@@ -10,9 +13,12 @@ public class MfromN extends SemanticControl {
 
     /**
      * Constructor for MfromN Model
+     * 
+     * @param display the display for the presenters
+     * @param shell   the shell for the presenters
      */
-    public MfromN() {
-        super();
+    public MfromN(Display display, Shell shell) {
+        super(display, shell);
     }
 
     /**
@@ -22,16 +28,28 @@ public class MfromN extends SemanticControl {
      * @param layout the layout of the presenter buttons
      */
     @Override
-    public void addView(Views view, boolean layout) {
+    public void addView(Views view, boolean layout, String title) {
         switch (view) {
             case FULL:
-                getViews().add(new FullListView(this, Views.FULL));
+                FullListView fullView = new FullListView(this, Views.FULL);
+                if (!title.equals(null)) {
+                    fullView.setGroupTitle(title);
+                }
+                getViews().add(fullView);
                 break;
             case SCROLL:
-                getViews().add(new ScrollListView(this, Views.SCROLL));
+                ScrollListView scrollView = new ScrollListView(this, Views.SCROLL);
+                if (!title.equals(null)) {
+                    scrollView.setGroupTitle(title);
+                }
+                getViews().add(scrollView);
                 break;
             case DOUBLE:
-                getViews().add(new DoubleListView(this));
+                DoubleListView doubleView = new DoubleListView(this);
+                if (!title.equals(null)) {
+                    doubleView.setGroupTitle(title);
+                }
+                getViews().add(doubleView);
                 break;
             default:
                 System.out.println("Error: Incapatable view selected: " + view);

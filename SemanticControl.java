@@ -1,6 +1,9 @@
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -26,13 +29,18 @@ public abstract class SemanticControl {
 
     /**
      * Constructor for Semantic Control
+     * 
+     * @param display the display used to display the presenters
+     * @param shell   the shell used to output the Ui
      */
-    public SemanticControl() {
+    public SemanticControl(Display display, Shell shell) {
         this.allValues = new LinkedList<>();
         this.currValue = new LinkedList<>();
         this.views = new LinkedList<>();
-        this.display = new Display();
-        this.shell = new Shell(display);
+        this.display = display;
+        this.shell = shell;
+        this.shell.setLayout(new GridLayout(2, false));
+        this.shell.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
     }
 
     /**
@@ -69,8 +77,9 @@ public abstract class SemanticControl {
      * 
      * @param view   a value to add to the current Values
      * @param layout the layout of the presenter buttons
+     * @param title  the title of the view, null if no title
      */
-    public abstract void addView(Views view, boolean layout);
+    public abstract void addView(Views view, boolean layout, String title);
 
     /**
      * Gets a list of all the model's views
@@ -88,6 +97,17 @@ public abstract class SemanticControl {
      */
     public List<Object> getCurrValue() {
         return currValue;
+    }
+
+    /**
+     * Updates the View when the CurrValues of Model are changed
+     */
+    public void updateViews() {
+
+        for (UiView view : views) {
+            System.out.println("Updating: " + view);
+            view.updateView(currValue);
+        }
     }
 
     /**
@@ -160,19 +180,4 @@ public abstract class SemanticControl {
     public void openShell() {
         this.getShell().open();
     }
-
-    /**
-     * Opens the Shell and displays the Presenters until exited
-     */
-    public void launchUi() {
-        shell.pack();
-        shell.open();
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
-        display.dispose();
-    }
-
 }

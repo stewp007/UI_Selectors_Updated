@@ -23,5 +23,9 @@ public enum Views {
     /** Text box that is shows and accepts only valid value-names */
     TEXTFIELD,
     /** Toggle button On Off view */
-    TOGGLE;
+    TOGGLE,
+    /** A spinner with a set range */
+    SPINNER,
+    /** A slider with a set range */
+    SLIDER;
 }

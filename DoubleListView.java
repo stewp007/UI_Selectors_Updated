@@ -45,16 +45,11 @@ public class DoubleListView extends UiView {
      * Initializes the views of the controller
      */
     public void initViews() {
-        /*
-         * if ((getType() == Views.DOUBLE) && this instanceof FullListView) {
-         * System.out.println("Not for this view."); } else {
-         */
         for (Object value : getModel().getAllValues()) {
             if (value != null) {
                 addButton((String) value);
             }
         }
-        // }
     }
 
     /**
@@ -95,7 +90,7 @@ public class DoubleListView extends UiView {
     public void addButton(String label) {
         Button newButton = buttonExists(label);
         if (newButton == null) {
-            System.out.println("New Visible: " + label);
+            // System.out.println("New Visible: " + label);
             newButton = new Button(this.getButtonGroup(), SWT.CHECK);
             newButton.setText(label);
             newButton.setVisible(true);
@@ -136,6 +131,7 @@ public class DoubleListView extends UiView {
                         getModel().getShell().layout();
                         getModel().getShell().redraw();
                     }
+                    getModel().updateViews();
                 }
 
             });
@@ -148,7 +144,7 @@ public class DoubleListView extends UiView {
             this.setNumButtons(getNumButtons() + 1);
         } else {
             newButton.setVisible(true);
-            System.out.println("Now Visible: " + newButton.getText());
+            // System.out.println("Now Visible: " + newButton.getText());
             for (Control child : getButtonGroup().getChildren()) {
                 if (child instanceof Button && !child.isVisible()) {
                     child.moveBelow(newButton);
@@ -156,6 +152,7 @@ public class DoubleListView extends UiView {
             }
         }
         getButtonGroup().update();
+        // this.getModel().updateViews();
     }
 
     @Override
@@ -180,6 +177,7 @@ public class DoubleListView extends UiView {
 
             }
         }
+        this.getModel().updateViews();
     }
 
     /**
@@ -237,4 +235,48 @@ public class DoubleListView extends UiView {
         this.groupLabel.setText(title);
     }
 
+    @Override
+    public void updateView(List<Object> currValues) {
+        if (currValues.size() == 0) {
+            for (Button button : getButtons()) {
+                button.setSelection(false);
+            }
+            for (Button button : choiceView.getButtons()) {
+                button.setVisible(false);
+            }
+        } else {
+            for (Object label : currValues) {
+                String text = (String) label;
+                for (Button button : getButtons()) {
+                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                        button.setSelection(true);
+                        Button exists = choiceButtonExists(button.getText());
+                        if (exists == null) {
+                            Button tempButton = getNewChoiceButton(button);
+                            choiceView.getButtons().add(tempButton);
+                            for (Control child : choiceView.getButtonGroup().getChildren()) {
+                                if (child instanceof Button && !child.isVisible()) {
+                                    tempButton.moveAbove(child);
+                                }
+                            }
+                            choiceView.getButtonGroup().layout();
+                        }
+                    } else {
+                        button.setSelection(false);
+                    }
+                }
+                for (Button button : choiceView.getButtons()) {
+                    if (!currValues.contains(button.getText())) {
+                        button.setVisible(false);
+                        for (Control child : choiceView.getButtonGroup().getChildren()) {
+                            if (child instanceof Button && child.isVisible()) {
+                                button.moveBelow(child);
+                            }
+                        }
+                        choiceView.getButtonGroup().layout();
+                    }
+                }
+            }
+        }
+    }
 }
