@@ -29,6 +29,7 @@ public abstract class SemanticControl {
 
     /**
      * Constructor for Semantic Control
+     * 
      * @param display the display used to display the presenters
      * @param shell   the shell used to output the Ui
      */
@@ -37,7 +38,7 @@ public abstract class SemanticControl {
         this.currValue = new LinkedList<>();
         this.views = new LinkedList<>();
         this.display = display;
-        this.shell =shell;
+        this.shell = shell;
         this.shell.setLayout(new GridLayout(2, false));
         this.shell.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
     }
@@ -103,7 +104,7 @@ public abstract class SemanticControl {
     public void updateViews() {
         
         for (UiView view : views) {
-        	System.out.println("Updating");
+        	System.out.println("Updating" + view);
             view.updateView(currValue);
         }
     }
