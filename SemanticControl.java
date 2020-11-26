@@ -108,8 +108,7 @@ public abstract class SemanticControl {
             view.updateView(currValue);
         }
     }
-
-    
+  
     /**
      * Adds a value to the current list of values
      * 
