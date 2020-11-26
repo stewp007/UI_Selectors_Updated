@@ -102,12 +102,13 @@ public abstract class SemanticControl {
      * Updates the View when the CurrValues of Model are changed
      */
     public void updateViews() {
-        
+
         for (UiView view : views) {
-        	System.out.println("Updating: " + view);
+            System.out.println("Updating: " + view);
             view.updateView(currValue);
         }
     }
+
     
     /**
      * Adds a value to the current list of values
