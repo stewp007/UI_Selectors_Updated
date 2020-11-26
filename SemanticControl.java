@@ -104,7 +104,7 @@ public abstract class SemanticControl {
     public void updateViews() {
         
         for (UiView view : views) {
-        	System.out.println("Updating" + view);
+        	System.out.println("Updating: " + view);
             view.updateView(currValue);
         }
     }
