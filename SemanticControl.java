@@ -1,6 +1,9 @@
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -26,8 +29,8 @@ public abstract class SemanticControl {
 
     /**
      * Constructor for Semantic Control
-     * @param display the display used with all the Ui Components
-     * @param shell   the Shell used with all the Ui components 
+     * @param display the display used to display the presenters
+     * @param shell   the shell used to output the Ui
      */
     public SemanticControl(Display display, Shell shell) {
         this.allValues = new LinkedList<>();
@@ -35,6 +38,8 @@ public abstract class SemanticControl {
         this.views = new LinkedList<>();
         this.display = display;
         this.shell =shell;
+        this.shell.setLayout(new GridLayout(2, false));
+        this.shell.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
     }
 
     /**
@@ -96,8 +101,9 @@ public abstract class SemanticControl {
      * Updates the View when the CurrValues of Model are changed
      */
     public void updateViews() {
-        System.out.println("Updating");
+        
         for (UiView view : views) {
+        	System.out.println("Updating");
             view.updateView(currValue);
         }
     }
