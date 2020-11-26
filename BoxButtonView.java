@@ -16,8 +16,7 @@ import org.eclipse.swt.widgets.Label;
  */
 
 /**
- * @author stewartpowell The Full List of labeled Check boxes UI presenter Used
- *         for M-From-N Semantic Control
+ * @author Will
  */
 public class BoxButtonView extends UiView {
     /** The group of buttons in the scrollable group */
@@ -45,91 +44,41 @@ public class BoxButtonView extends UiView {
      * Initializes the views of the controller
      */
     public void initViews() {
-        if ((getType() == Views.DOUBLE) && this instanceof BoxButtonView) {
-            System.out.println("Not for this view.");
-        } else {
-            for (Object value : getModel().getAllValues()) {
-                if (value != null) {
-                    addButton((String) value);
-                }
-            }
+        for (Object value : getModel().getAllValues()) {
+            if (value != null) {
+                addButton((String) value);
+            }           
         }
     }
 
     @Override
     public void addButton(String label) {
-        Button newButton = buttonExists(label);
-        if (newButton == null) {
-            System.out.println("New Visible: " + label);
-            newButton = new Button(getButtonGroup(), SWT.TOGGLE);
-            newButton.setText(label);
-            newButton.setVisible(true);
-            newButton.addSelectionListener(new SelectionAdapter() {
+        Button newButton = new Button(getButtonGroup(), SWT.TOGGLE);
+        newButton.setText(label);
+        newButton.setVisible(true);
+        newButton.addSelectionListener(new SelectionAdapter() {
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    Button source = (Button) e.getSource();
-                    if (source.getSelection()) {
-                        getModel().getCurrValue().add(source.getText());
-                        for(Button buttons : getButtons()) {
-                        	if(!buttons.getText().equals(label)) {
-                        		buttons.setSelection(false);
-                        		getModel().getCurrValue().remove(buttons.getText());
-                        	}
-                        }
-                    } 
-                }
-            });
-            this.getButtons().add(newButton);
-            this.setNumButtons(getNumButtons() + 1);
-        } else {
-            newButton.setVisible(true);
-            System.out.println("Now Visible: " + newButton.getText());
-            for (Control child : getButtonGroup().getChildren()) {
-                if (child instanceof Button && !child.isVisible()) {
-                    child.moveBelow(newButton);
-                }
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Button source = (Button) e.getSource();
+                if (source.getSelection()) {
+                    getModel().getCurrValue().add(source.getText());
+                    for(Button buttons : getButtons()) {
+                    	if(!buttons.getText().equals(label) && buttons.getSelection()) {
+                    		buttons.setSelection(false);
+                    		getModel().getCurrValue().remove(buttons.getText());
+                    	}
+                    }
+                    getModel().updateViews();
+                } 
             }
+        });
+        this.getButtons().add(newButton);
+        this.setNumButtons(getNumButtons() + 1);
 
-        }
         getButtonGroup().update();
     }
 
-    /**
-     * Adds a new button to the presenter
-     * 
-     * @param button the new button to add
-     */
-    public void addButton(Button button) {
-        System.out.println("Adding button");
-        if ((button.getStyle() & SWT.TOGGLE) != SWT.TOGGLE) {
-            System.out.println("Invalid Button type: " + button.getStyle());
-        } else {
-            Button newButton = buttonExists(button.getText());
-            if (newButton == null) {
-                getButtons().add(button);
-                System.out.println("Adding new new button");
-                for (Control child : getButtonGroup().getChildren()) {
-                    if (child instanceof Button && child.isVisible()) {
-                        child.moveBelow(button);
-                    }
-                }
-                this.setNumButtons(getNumButtons() + 1);
-            } else {
-                System.out.println("Adding new button");
-                newButton.setVisible(button.isVisible());
-                newButton.setSelection(button.getSelection());
-                newButton.setGrayed(button.getGrayed());
-                newButton.setEnabled(button.getEnabled());
-                for (Control child : getButtonGroup().getChildren()) {
-                    if (child instanceof Button && !child.isVisible()) {
-                        child.moveBelow(newButton);
-                    }
-                }
-            }
-            getButtonGroup().update();
-        }
-    }
 
     @Override
     public void addManyButtons(List<Object> labels) {
@@ -153,6 +102,8 @@ public class BoxButtonView extends UiView {
 
             }
         }
+        
+        this.getModel().updateViews();
     }
 
     /**
@@ -192,6 +143,29 @@ public class BoxButtonView extends UiView {
         this.groupLabel.setText(title);
     }
 
+    @Override
+    public void updateView(List<Object> currValues) {
+        if (currValues.size() == 0) {
+            for (Button button : getButtons()) {
+                button.setSelection(false);
+            }
+        } else {
+            for (Object label : currValues) {
+                String text = (String) label;
+                System.out.println("Updating view: " + text);
+                for (Button button : getButtons()) {
+                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                        button.setSelection(true);
+
+                    } else {
+                        button.setSelection(false);
+                    }
+                }
+            }
+        }
+    }
+
+    
     /**
      * Adds a colored background to the group of buttons
      * 

@@ -99,6 +99,13 @@ public abstract class UiView {
      * @param labels the list of labels to attach to the buttons
      */
     public abstract void addManyButtons(List<Object> labels);
+    
+    /**
+     * Updates the View when the CurrValues of Model are changed
+     * 
+     * @param currValues the list of current values of the model
+     */
+    public abstract void updateView(List<Object> currValues);
 
     /**
      * Updates the View when the CurrValues of Model are changed
