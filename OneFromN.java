@@ -23,23 +23,35 @@ public class OneFromN extends SemanticControl {
      * @param layout the layout of the presenter buttons
      */
     @Override
-    public void addView(Views view, boolean layout) {
+    public void addView(Views view, boolean layout, String title) {
         switch (view) {
             case RADIOB:
-                getViews().add(new RadioButtonView(this));
+            	RadioButtonView radioButtonView = new RadioButtonView(this);
+            	
+            	if (!title.equals(null)) {
+                      radioButtonView.setGroupTitle(title);
+                }
+            	
+                getViews().add(radioButtonView);
                 break;
             case BOXB:
-                getViews().add(new BoxButtonView(this));
+            	BoxButtonView boxButtonView = new BoxButtonView(this);
+            	
+            	if (!title.equals(null)) {
+                    boxButtonView.setGroupTitle(title);
+                }
+            	
+                getViews().add(boxButtonView);
                 break;
             case POPUP:
-                getViews().add(new PopMenuView(this));
+            	PopMenuView popMenuView = new PopMenuView(this);
+            	
+            	if (!title.equals(null)) {
+                    popMenuView.setGroupTitle(title);
+                }
+            	
+                getViews().add(popMenuView);
                 break;
-//            case CIRCLEB:
-//                getViews().add(new DoubleListView(this));
-//                break;
-//            case TEXTFIELD:
-//                getViews().add(new DoubleListView(this));
-//                break;
             default:
                 System.out.println("Error: Incapatable view selected: " + view);
         }
