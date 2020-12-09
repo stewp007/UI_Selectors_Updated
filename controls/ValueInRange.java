@@ -1,5 +1,11 @@
+package controls;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
+import helper.Views;
+import presenters.SliderView;
+import presenters.SpinnerView;
+import presenters.UiView;
 
 /**
  * @author stewartpowell The Value in Range Semantic Control

@@ -1,145 +1,78 @@
+package presenters;
 
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.graphics.Point;
 
-public class SwitchButtonView extends UiView {
+import controls.SemanticControl;
+import helper.Views;
+
+
+public class ToggleButtonView extends UiView {
 	
 	
 	    /** The group of buttons in the scrollable group */
 	    private final Composite buttonGroup;
 	    /** The name of the group of check boxes */
 	    private Label groupLabel;
-	    
-	    Display display;
-	    Shell shell;
 
 	    /**
 	     * Constructor for the Full List View class
 	     * 
 	     * @param model the model associated with the shell and display
 	     */
-	    public SwitchButtonView(SemanticControl model) {
+	    public ToggleButtonView(SemanticControl model) {
 	        super(model, Views.TOGGLE);
-	        model.getShell().setLayout(new GridLayout(1, true));
+	        model.getShell().setLayout(new GridLayout(2, false));
 	        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	        this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
-	      
-	        buttonGroup.setLayout(new GridLayout(1, true));
+	        buttonGroup.setLayout(new GridLayout(1, false));
 	        buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	        
-//	        GridData gridData = new GridData();
-//	        gridData.verticalAlignment = GridData.FILL;
-//	        
-//	        gridData = new GridData();
-//	        gridData.verticalAlignment = GridData.FILL;
-//	        gridData.verticalSpan = 2;
-//	        gridData.grabExcessVerticalSpace = true;
-//	        gridData.horizontalAlignment = GridData.FILL;
-//	        gridData.grabExcessHorizontalSpace = true;
-//	        gridData.widthHint = 80;
-//	        gridData.heightHint = 80;
-//	        buttonGroup.setLayoutData(gridData);
-//	       
-	        this.groupLabel = new Label(model.getShell(), SWT.NONE);
-	        display = model.getDisplay();
-	        shell = model.getShell();
-	        
-	        
+	        this.groupLabel = new Label(buttonGroup, SWT.NONE);
 	        initViews();
-	    }
-	    
-	    /**
-	     * Gets the Display of the UI presenter
-	     * 
-	     * @return the display of the UI presenter
-	     */
-	    public Display getDisplay() {
-	        return display;
-	    }
-	    
-	    /**
-	     * Gets the Shell of the UI presenter
-	     * 
-	     * @return the shell of the UI presenter
-	     */
-	    public Shell getSell() {
-	        return shell;
 	    }
 
 	    /**
 	     * Initializes the views of the controller
 	     */
 	    public void initViews() {
-	        if ((getType() == Views.DOUBLE) && this instanceof SwitchButtonView) {
+	        if ((getType() == Views.DOUBLE) && this instanceof ToggleButtonView) {
 	            System.out.println("Not for this view.");
 	        } else {
 	            for (Object value : getModel().getAllValues()) {
-	            	   	            
 	                if (value != null) {
-	                	
-	                	    	            
 	                    addButton((String) value);
 	                }
 	            }
 	        }
 	    }
-	    
+
 	    @Override
 	    public void addButton(String label) {
-	        Button currentButton = buttonExists(label);
-	        
-	       // Image iconSelect = MyImageUtils.getImage(display, "/button_image/t_on.jpg");
-            //Image iconDeselect = MyImageUtils.getImage(display, "/button_image/t_off.jpg");
-            
-            Image iconSelect = MyImageUtils.getImage(display, "/button_image/on.jpeg");
-            Image iconDeselect = MyImageUtils.getImage(display, "/button_image/off.jpeg");
-     
-     
-	        if (currentButton == null) {
+	        Button newButton = buttonExists(label);
+	        if (newButton == null) {
 	            System.out.println("Creating New Button: " + label);
-	                        
-	            final Button newButton = new Button(shell, SWT.TOGGLE);    
-	            newButton.setSize(new Point(200,20));
-
+	            newButton = new Button(getButtonGroup(), SWT.TOGGLE);
 	            newButton.setText(label);
-	        	           	                      
 	            newButton.setVisible(true);
-	            
-	            Label groupLabel = new Label(shell, SWT.BORDER);
-	            groupLabel.setText(label);
-	            
-	            shell.pack();
-            
 	            newButton.addSelectionListener(new SelectionAdapter() {
 
-	            	
 	                @Override
 	                public void widgetSelected(SelectionEvent e) {
 	                    Button source = (Button) e.getSource();
 	                    if (source.getSelection()) {
-	                    		                    	        	            
-	                    	newButton.setImage(iconSelect);
 	                        getModel().getCurrValue().add(source.getText());
-	                        	                    	        	            
 	                        System.out.println("Group " + source.getText() + " now CAN see your posts ");
 	                    } else {
-	                    	newButton.setImage(iconDeselect);
-	                    	 
 	                        getModel().getCurrValue().remove(source.getText());
 	                        System.out.println("Group " + source.getText() + " now CAN NOT see your posts ");
 	                    }
@@ -149,11 +82,11 @@ public class SwitchButtonView extends UiView {
 	            this.getButtons().add(newButton);
 	            this.setNumButtons(getNumButtons() + 1);
 	        } else {
-	        	currentButton.setVisible(true);
-	            System.out.println("Now Visible: " + currentButton.getText());
+	            newButton.setVisible(true);
+	            System.out.println("Now Visible: " + newButton.getText());
 	            for (Control child : getButtonGroup().getChildren()) {
 	                if (child instanceof Button && !child.isVisible()) {
-	                    //child.moveBelow(currentButton);
+	                    child.moveBelow(newButton);
 	                }
 	            }
 
@@ -199,13 +132,8 @@ public class SwitchButtonView extends UiView {
 
 	    @Override
 	    public void addManyButtons(List<Object> labels) {
-	    	
-	    	
 	        for (int i = 0; i < labels.size(); i++) {
 	            addButton((String) labels.get(i));
-	            
-	            
-	            
 	        }
 	    }
 
@@ -292,7 +220,9 @@ public class SwitchButtonView extends UiView {
 		                    }
 		                }
 		            }
-		      }
+		        }
+
+			
 		}
 	}
 

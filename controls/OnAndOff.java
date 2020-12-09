@@ -1,5 +1,12 @@
+package controls;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
+import helper.Views;
+import presenters.CheckBoxView;
+import presenters.SwitchButtonView;
+import presenters.ToggleButtonView;
+import presenters.UiView;
 
 /**
  * @author Serena

@@ -1,7 +1,7 @@
+package presenters;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -12,34 +12,34 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
+import controls.SemanticControl;
+import helper.Views;
+
 /**
  * 
  * @author Will Array of bullets with labels Used
- *         for One-From-N Semantic Control
+ *         for M-From-N Semantic Control
  *
  */
-public class PopMenuView extends UiView {
+public class RadioButtonView extends UiView {
 	/** The group of buttons in the Radio button group */
     private final Composite buttonGroup;
     /** The name of the group of Radio button */
     private Label groupLabel;
-    /** The menu of all labels */
-    private CCombo combo;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param model the model associated with the shell and display
 	 */
-	public PopMenuView(SemanticControl model) {
-		super(model, Views.POPUP);
+	public RadioButtonView(SemanticControl model) {
+		super(model, Views.RADIOB);
 		model.getShell().setLayout(new GridLayout(2, false));
 	    model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	    this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
 	    buttonGroup.setLayout(new GridLayout(1, false));
 	    buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	    this.groupLabel = new Label(buttonGroup, SWT.NONE);
-	    
 	    initViews();
 	}
 	
@@ -47,31 +47,36 @@ public class PopMenuView extends UiView {
 	 * Initializes the views of the controller
 	 */
 	public void initViews() {
-		combo = new CCombo(getButtonGroup(), SWT.READ_ONLY);
-		addButton("Select one");
+	    for (Object value : getModel().getAllValues()) {
+	        if (value != null) {
+	            addButton((String) value);
+	        }
+	    }
 	}
 	
 	@Override
 	public void addButton(String label) {
-		combo.setText(label);
-		
-	    for (Object value : getModel().getAllValues()) {
-	        if (value != null) {
-	        	combo.add(value.toString());
-	        }
-	    }
-		
-		combo.addSelectionListener(new SelectionAdapter() {
-			
+	    Button newButton = new Button(getButtonGroup(), SWT.RADIO);
+	    newButton.setText(label);
+	    newButton.setVisible(true);
+	    newButton.addSelectionListener(new SelectionAdapter() {
+	
 	        @Override
 	        public void widgetSelected(SelectionEvent e) {
-	        	getModel().getCurrValue().clear();;
-                getModel().getCurrValue().add(combo.getItem(combo.getSelectionIndex()));
-                getModel().updateViews();
+	            Button source = (Button) e.getSource();
+	            if (source.getSelection()) {
+	                getModel().getCurrValue().add(source.getText());
+	                getModel().updateViews();
+	            } else {
+	                getModel().getCurrValue().remove(source.getText());
+	            }
+	            
 	        }
 	    });
-	    getButtonGroup().update();
+	    this.getButtons().add(newButton);
+	    this.setNumButtons(getNumButtons() + 1);
 	    
+	    getButtonGroup().update();
 	}
 	
 	@Override
@@ -96,6 +101,8 @@ public class PopMenuView extends UiView {
 	
 	        }
 	    }
+	    
+	    this.getModel().updateViews();
 	}
 	
 	/**
@@ -137,20 +144,26 @@ public class PopMenuView extends UiView {
 	
 	@Override
 	public void updateView(List<Object> currValues) {
-		int comboIndex = -1;
-		
-	    if (currValues.size() != 0) {
-	    	combo.deselectAll();
-	    	for (Object value : getModel().getAllValues()) {
-	    		comboIndex++;
-	            if (value.toString().equals(currValues.get(0))) {
-	            	System.out.println("Updating view: " + value.toString());
-	            	combo.select(comboIndex);
+	    if (currValues.size() == 0) {
+	        for (Button button : getButtons()) {
+	            button.setSelection(false);
+	        }
+	    } else {
+	        for (Object label : currValues) {
+	            String text = (String) label;
+	            System.out.println("Updating view: " + text);
+	            for (Button button : getButtons()) {
+	                if (button.getText().equals(text) || currValues.contains(button.getText())) {
+	                    button.setSelection(true);
+	
+	                } else {
+	                    button.setSelection(false);
+	                }
 	            }
 	        }
 	    }
-	}
 	
+	}
 	
 	/**
 	 * Adds a colored background to the group of buttons
@@ -160,5 +173,4 @@ public class PopMenuView extends UiView {
 	public void setGroupBackground(int color) {
 	    getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
 	}
-
 }

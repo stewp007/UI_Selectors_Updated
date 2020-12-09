@@ -1,3 +1,4 @@
+package presenters;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
 import java.util.List;
@@ -8,6 +9,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+
+import controls.ValueInRange;
+import helper.Views;
 
 /**
  * @author stewartpowell
