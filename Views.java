@@ -26,6 +26,8 @@ public enum Views {
     TOGGLE,
     /** A spinner with a set range */
     SPINNER,
+    /** Button that contains two images showing different status */
+    SWITCH,
     /** A slider with a set range */
     SLIDER;
 }
