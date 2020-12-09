@@ -1,4 +1,5 @@
-package presenters;
+package src;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +24,15 @@ import org.eclipse.swt.widgets.Label;
  *         for M-From-N Semantic Control
  */
 public class CheckBoxView extends UiView {
-	
-	/** The Second view that shows the selections */
- 
+
+    /** The Second view that shows the selections */
 
     /** The group of buttons in the group */
     private final Composite buttonGroup;
     /** The name of the group of check boxes */
     private Label groupLabel;
-    
-    /**The selected buttons*/
+
+    /** The selected buttons */
     public static ArrayList<Object> listOfObjects;
 
     /**
@@ -41,17 +41,17 @@ public class CheckBoxView extends UiView {
      * @param model the model associated with the shell and display
      * @param type  the type of view
      */
-    
+
     public CheckBoxView(SemanticControl model) {
         super(model, Views.FULL);
         model.getShell().setLayout(new GridLayout(2, false));
         model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
-        
+
         buttonGroup.setLayout(new GridLayout(1, false));
         buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.groupLabel = new Label(buttonGroup, SWT.NONE);
-        
+
         initViews();
     }
 
@@ -84,17 +84,17 @@ public class CheckBoxView extends UiView {
                 public void widgetSelected(SelectionEvent e) {
                     Button source = (Button) e.getSource();
                     if (source.getSelection()) {
-                    	
-                    	getModel().addCurrValue(source.getText());
-                    	
+
+                        getModel().addCurrValue(source.getText());
+
                         System.out.println("Group " + source.getText() + " now CAN see your posts ");
-                        
+
                     } else {
-                    
-                    	getModel().getCurrValue().remove(source.getText());
-                    	System.out.println();
+
+                        getModel().getCurrValue().remove(source.getText());
+                        System.out.println();
                         System.out.println("Group " + source.getText() + " now CAN NOT see your posts ");
-                       
+
                     }
                     getModel().updateViews();
                 }
@@ -221,62 +221,56 @@ public class CheckBoxView extends UiView {
         getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
     }
 
+    /**
+     * Gets the choice view of this presenter
+     * 
+     * @return the choiceView of this presenter
+     */
+    public ArrayList<Object> listOfObjects() {
 
-/**
- * Gets the choice view of this presenter
- * 
- * @return the choiceView of this presenter
- */
-public ArrayList<Object> listOfObjects(){
-	
-	return listOfObjects;
-	
-}
+        return listOfObjects;
 
+    }
 
+    /** Print a lists of objects */
 
-/**Print a lists of objects*/
+    public static void printList(ArrayList<Object> theList) {
 
-public static void printList(ArrayList<Object> theList) {
-	
-	for(int i = 0; i < theList.size();i++) {
-		
-		System.out.println(theList.get(i));
-	}
-	
-}
+        for (int i = 0; i < theList.size(); i++) {
 
-public static void main(String[] args) {
-	
-	
-	System.out.println("here/n");
-	System.out.println("List: \n");
-	printList(listOfObjects);
-}
+            System.out.println(theList.get(i));
+        }
 
-@Override
-public void updateView(List<Object> currValues) {
-	 if (currValues.size() == 0) {
-         for (Button button : getButtons()) {
-             button.setSelection(false);
-         }
-     } else {
-         for (Object label : currValues) {
-             String text = (String) label;
-             System.out.println("Updating view: " + text);
-             for (Button button : getButtons()) {
-                 if (button.getText().equals(text) || currValues.contains(button.getText())) {
-                     button.setSelection(true);
+    }
 
-                 } else {
-                     button.setSelection(false);
-                 }
-             }
-         }
-     }
+    public static void main(String[] args) {
 
- }
-	
+        System.out.println("here/n");
+        System.out.println("List: \n");
+        printList(listOfObjects);
+    }
 
+    @Override
+    public void updateView(List<Object> currValues) {
+        if (currValues.size() == 0) {
+            for (Button button : getButtons()) {
+                button.setSelection(false);
+            }
+        } else {
+            for (Object label : currValues) {
+                String text = (String) label;
+                System.out.println("Updating view: " + text);
+                for (Button button : getButtons()) {
+                    if (button.getText().equals(text) || currValues.contains(button.getText())) {
+                        button.setSelection(true);
+
+                    } else {
+                        button.setSelection(false);
+                    }
+                }
+            }
+        }
+
+    }
 
 }

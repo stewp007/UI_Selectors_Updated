@@ -1,10 +1,9 @@
-package presenters;
+package src;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Button;
-
-import controls.SemanticControl;
 
 /**
  * All UiViews must contain a controller
@@ -102,7 +101,7 @@ public abstract class UiView {
      * @param labels the list of labels to attach to the buttons
      */
     public abstract void addManyButtons(List<Object> labels);
-    
+
     /**
      * Updates the View when the CurrValues of Model are changed
      * 

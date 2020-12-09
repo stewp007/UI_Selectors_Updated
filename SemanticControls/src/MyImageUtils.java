@@ -1,14 +1,14 @@
-package presenters;
+package src;
+
 
 import java.io.IOException;
 import java.io.InputStream;
- 
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
- 
+
 public class MyImageUtils {
- 
-    
+
     // resourcePath: "/org/o7planning/swt/icon/java-32.png"
     public static Image getImage(Display display, String resourcePath) {
         InputStream input = null;
@@ -21,7 +21,7 @@ public class MyImageUtils {
             closeQuietly(input);
         }
     }
- 
+
     private static void closeQuietly(InputStream is) {
         try {
             if (is != null) {
@@ -30,5 +30,5 @@ public class MyImageUtils {
         } catch (IOException e) {
         }
     }
-    
+
 }

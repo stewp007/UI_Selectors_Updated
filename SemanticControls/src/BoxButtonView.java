@@ -1,4 +1,5 @@
-package presenters;
+package src;
+
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -11,9 +12,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-
-import controls.SemanticControl;
-import helper.Views;
 
 /**
  * 
@@ -51,7 +49,7 @@ public class BoxButtonView extends UiView {
         for (Object value : getModel().getAllValues()) {
             if (value != null) {
                 addButton((String) value);
-            }           
+            }
         }
     }
 
@@ -67,14 +65,14 @@ public class BoxButtonView extends UiView {
                 Button source = (Button) e.getSource();
                 if (source.getSelection()) {
                     getModel().getCurrValue().add(source.getText());
-                    for(Button buttons : getButtons()) {
-                    	if(!buttons.getText().equals(label) && buttons.getSelection()) {
-                    		buttons.setSelection(false);
-                    		getModel().getCurrValue().remove(buttons.getText());
-                    	}
+                    for (Button buttons : getButtons()) {
+                        if (!buttons.getText().equals(label) && buttons.getSelection()) {
+                            buttons.setSelection(false);
+                            getModel().getCurrValue().remove(buttons.getText());
+                        }
                     }
                     getModel().updateViews();
-                } 
+                }
             }
         });
         this.getButtons().add(newButton);
@@ -82,7 +80,6 @@ public class BoxButtonView extends UiView {
 
         getButtonGroup().update();
     }
-
 
     @Override
     public void addManyButtons(List<Object> labels) {
@@ -106,7 +103,7 @@ public class BoxButtonView extends UiView {
 
             }
         }
-        
+
         this.getModel().updateViews();
     }
 
@@ -169,7 +166,6 @@ public class BoxButtonView extends UiView {
         }
     }
 
-    
     /**
      * Adds a colored background to the group of buttons
      * 

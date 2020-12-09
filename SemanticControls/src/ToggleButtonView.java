@@ -1,11 +1,10 @@
-package presenters;
+package src;
+
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -14,20 +13,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
-import controls.SemanticControl;
-import helper.Views;
+public class ToggleButtonView extends UiView {
 
-/**
- * 
- */
-
-/**
- * @author stewartpowell
- *
- */
-public class ScrollListView extends UiView {
-    /** A scrollable group of check boxes */
-    private final ScrolledComposite scrollGroup;
     /** The group of buttons in the scrollable group */
     private final Composite buttonGroup;
     /** The name of the group of check boxes */
@@ -37,32 +24,29 @@ public class ScrollListView extends UiView {
      * Constructor for the Full List View class
      * 
      * @param model the model associated with the shell and display
-     * @param type  the type of view
      */
-    public ScrollListView(SemanticControl model, Views type) {
-        super(model, type);
-        model.getShell().setLayout(new FillLayout());
-        this.scrollGroup = new ScrolledComposite(model.getShell(), SWT.V_SCROLL);
-        this.scrollGroup.setLayout(new GridLayout(1, false));
-        this.buttonGroup = new Composite(scrollGroup, SWT.NONE);
+    public ToggleButtonView(SemanticControl model) {
+        super(model, Views.TOGGLE);
+        model.getShell().setLayout(new GridLayout(2, false));
+        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
         buttonGroup.setLayout(new GridLayout(1, false));
         buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.groupLabel = new Label(buttonGroup, SWT.NONE);
         initViews();
-        scrollGroup.setExpandHorizontal(true);
-        scrollGroup.setExpandVertical(true);
-        scrollGroup.setContent(buttonGroup);
-        scrollGroup.setMinSize(buttonGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
     }
 
     /**
      * Initializes the views of the controller
      */
     public void initViews() {
-        for (Object value : getModel().getAllValues()) {
-            if (value != null) {
-                addButton((String) value);
+        if ((getType() == Views.DOUBLE) && this instanceof ToggleButtonView) {
+            System.out.println("Not for this view.");
+        } else {
+            for (Object value : getModel().getAllValues()) {
+                if (value != null) {
+                    addButton((String) value);
+                }
             }
         }
     }
@@ -71,10 +55,9 @@ public class ScrollListView extends UiView {
     public void addButton(String label) {
         Button newButton = buttonExists(label);
         if (newButton == null) {
-            System.out.println("New Visible: " + label);
-            newButton = new Button(this.getButtonGroup(), SWT.CHECK);
+            System.out.println("Creating New Button: " + label);
+            newButton = new Button(getButtonGroup(), SWT.TOGGLE);
             newButton.setText(label);
-            newButton.setLayoutData(new GridData(SWT.BEGINNING, 0, false, false));
             newButton.setVisible(true);
             newButton.addSelectionListener(new SelectionAdapter() {
 
@@ -83,8 +66,10 @@ public class ScrollListView extends UiView {
                     Button source = (Button) e.getSource();
                     if (source.getSelection()) {
                         getModel().getCurrValue().add(source.getText());
+                        System.out.println("Group " + source.getText() + " now CAN see your posts ");
                     } else {
                         getModel().getCurrValue().remove(source.getText());
+                        System.out.println("Group " + source.getText() + " now CAN NOT see your posts ");
                     }
                     getModel().updateViews();
                 }
@@ -102,8 +87,42 @@ public class ScrollListView extends UiView {
 
         }
         getButtonGroup().update();
-        getScrollGroup().update();
-        // this.getModel().updateViews();
+    }
+
+    /**
+     * Adds a new button to the presenter
+     * 
+     * @param button the new button to add
+     */
+    public void addButton(Button button) {
+        System.out.println("Adding button");
+        if ((button.getStyle() & SWT.TOGGLE) != SWT.TOGGLE) {
+            System.out.println("Invalid Button type: " + button.getStyle());
+        } else {
+            Button newButton = buttonExists(button.getText());
+            if (newButton == null) {
+                getButtons().add(button);
+                System.out.println("Adding new new button");
+                for (Control child : getButtonGroup().getChildren()) {
+                    if (child instanceof Button && child.isVisible()) {
+                        child.moveBelow(button);
+                    }
+                }
+                this.setNumButtons(getNumButtons() + 1);
+            } else {
+                System.out.println("Adding new button");
+                newButton.setVisible(button.isVisible());
+                newButton.setSelection(button.getSelection());
+                newButton.setGrayed(button.getGrayed());
+                newButton.setEnabled(button.getEnabled());
+                for (Control child : getButtonGroup().getChildren()) {
+                    if (child instanceof Button && !child.isVisible()) {
+                        child.moveBelow(newButton);
+                    }
+                }
+            }
+            getButtonGroup().update();
+        }
     }
 
     @Override
@@ -124,7 +143,7 @@ public class ScrollListView extends UiView {
                         child.moveAbove(button);
                     }
                 }
-                getScrollGroup().update();
+                getButtonGroup().update();
 
             }
         }
@@ -132,30 +151,12 @@ public class ScrollListView extends UiView {
     }
 
     /**
-     * Gets the scrollable group of buttons
-     * 
-     * @return the scrollable group of buttons
-     */
-    public ScrolledComposite getScrollGroup() {
-        return scrollGroup;
-    }
-
-    /**
      * Gets the buttonGroup
      * 
-     * @return the buttonGroup
+     * @return the button group
      */
     public Composite getButtonGroup() {
-        return this.buttonGroup;
-    }
-
-    /**
-     * Adds a colored background to the group of buttons
-     * 
-     * @param color the color of the background from SWT class
-     */
-    public void setGroupBackground(int color) {
-        getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
+        return buttonGroup;
     }
 
     /**
@@ -186,6 +187,15 @@ public class ScrollListView extends UiView {
         this.groupLabel.setText(title);
     }
 
+    /**
+     * Adds a colored background to the group of buttons
+     * 
+     * @param color the color of the background from SWT class
+     */
+    public void setGroupBackground(int color) {
+        getButtonGroup().setBackground(Display.getCurrent().getSystemColor(color));
+    }
+
     @Override
     public void updateView(List<Object> currValues) {
         if (currValues.size() == 0) {
@@ -206,6 +216,6 @@ public class ScrollListView extends UiView {
                 }
             }
         }
-    }
 
+    }
 }

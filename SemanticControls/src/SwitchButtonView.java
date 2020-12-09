@@ -1,10 +1,12 @@
-package presenters;
+package src;
 
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -12,49 +14,81 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
-import controls.SemanticControl;
-import helper.Views;
+public class SwitchButtonView extends UiView {
 
-/**
- * 
- */
-
-/**
- * @author Serena Pang
- */
-public class FullListView extends UiView {
     /** The group of buttons in the scrollable group */
     private final Composite buttonGroup;
     /** The name of the group of check boxes */
     private Label groupLabel;
 
+    Display display;
+    Shell shell;
+
     /**
      * Constructor for the Full List View class
      * 
      * @param model the model associated with the shell and display
-     * @param type  the type of view
      */
-    public FullListView(SemanticControl model, Views type) {
-        super(model, type);
-        // model.getShell().setLayout(new GridLayout(2, false));
-        // model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    public SwitchButtonView(SemanticControl model) {
+        super(model, Views.TOGGLE);
+        model.getShell().setLayout(new GridLayout(1, true));
+        model.getShell().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         this.buttonGroup = new Composite(model.getShell(), SWT.NONE);
-        buttonGroup.setLayout(new GridLayout(1, false));
+
+        buttonGroup.setLayout(new GridLayout(1, true));
         buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        this.groupLabel = new Label(buttonGroup, SWT.NONE);
+//	        
+//	        GridData gridData = new GridData();
+//	        gridData.verticalAlignment = GridData.FILL;
+//	        
+//	        gridData = new GridData();
+//	        gridData.verticalAlignment = GridData.FILL;
+//	        gridData.verticalSpan = 2;
+//	        gridData.grabExcessVerticalSpace = true;
+//	        gridData.horizontalAlignment = GridData.FILL;
+//	        gridData.grabExcessHorizontalSpace = true;
+//	        gridData.widthHint = 80;
+//	        gridData.heightHint = 80;
+//	        buttonGroup.setLayoutData(gridData);
+//	       
+        this.groupLabel = new Label(model.getShell(), SWT.NONE);
+        display = model.getDisplay();
+        shell = model.getShell();
+
         initViews();
+    }
+
+    /**
+     * Gets the Display of the UI presenter
+     * 
+     * @return the display of the UI presenter
+     */
+    public Display getDisplay() {
+        return display;
+    }
+
+    /**
+     * Gets the Shell of the UI presenter
+     * 
+     * @return the shell of the UI presenter
+     */
+    public Shell getSell() {
+        return shell;
     }
 
     /**
      * Initializes the views of the controller
      */
     public void initViews() {
-        if ((getType() == Views.DOUBLE) && this instanceof FullListView) {
-            // System.out.println("Not for this view.");
+        if ((getType() == Views.DOUBLE) && this instanceof SwitchButtonView) {
+            System.out.println("Not for this view.");
         } else {
             for (Object value : getModel().getAllValues()) {
+
                 if (value != null) {
+
                     addButton((String) value);
                 }
             }
@@ -63,21 +97,46 @@ public class FullListView extends UiView {
 
     @Override
     public void addButton(String label) {
-        Button newButton = buttonExists(label);
-        if (newButton == null) {
-            // System.out.println("New Visible: " + label);
-            newButton = new Button(getButtonGroup(), SWT.CHECK);
+        Button currentButton = buttonExists(label);
+
+        // Image iconSelect = MyImageUtils.getImage(display, "/button_image/t_on.jpg");
+        // Image iconDeselect = MyImageUtils.getImage(display,
+        // "/button_image/t_off.jpg");
+
+        Image iconSelect = MyImageUtils.getImage(display, "/button_image/on.jpeg");
+        Image iconDeselect = MyImageUtils.getImage(display, "/button_image/off.jpeg");
+
+        if (currentButton == null) {
+            System.out.println("Creating New Button: " + label);
+
+            final Button newButton = new Button(shell, SWT.TOGGLE);
+            newButton.setSize(new Point(200, 20));
+
             newButton.setText(label);
+
             newButton.setVisible(true);
+
+            Label groupLabel = new Label(shell, SWT.BORDER);
+            groupLabel.setText(label);
+
+            shell.pack();
+
             newButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     Button source = (Button) e.getSource();
                     if (source.getSelection()) {
+
+                        newButton.setImage(iconSelect);
                         getModel().getCurrValue().add(source.getText());
+
+                        System.out.println("Group " + source.getText() + " now CAN see your posts ");
                     } else {
+                        newButton.setImage(iconDeselect);
+
                         getModel().getCurrValue().remove(source.getText());
+                        System.out.println("Group " + source.getText() + " now CAN NOT see your posts ");
                     }
                     getModel().updateViews();
                 }
@@ -85,11 +144,11 @@ public class FullListView extends UiView {
             this.getButtons().add(newButton);
             this.setNumButtons(getNumButtons() + 1);
         } else {
-            newButton.setVisible(true);
-            System.out.println("Now Visible: " + newButton.getText());
+            currentButton.setVisible(true);
+            System.out.println("Now Visible: " + currentButton.getText());
             for (Control child : getButtonGroup().getChildren()) {
                 if (child instanceof Button && !child.isVisible()) {
-                    child.moveBelow(newButton);
+                    // child.moveBelow(currentButton);
                 }
             }
 
@@ -103,14 +162,14 @@ public class FullListView extends UiView {
      * @param button the new button to add
      */
     public void addButton(Button button) {
-        // System.out.println("Adding button");
-        if ((button.getStyle() & SWT.CHECK) != SWT.CHECK) {
+        System.out.println("Adding button");
+        if ((button.getStyle() & SWT.TOGGLE) != SWT.TOGGLE) {
             System.out.println("Invalid Button type: " + button.getStyle());
         } else {
             Button newButton = buttonExists(button.getText());
             if (newButton == null) {
                 getButtons().add(button);
-                // System.out.println("Adding new new button");
+                System.out.println("Adding new new button");
                 for (Control child : getButtonGroup().getChildren()) {
                     if (child instanceof Button && child.isVisible()) {
                         child.moveBelow(button);
@@ -118,7 +177,7 @@ public class FullListView extends UiView {
                 }
                 this.setNumButtons(getNumButtons() + 1);
             } else {
-                // System.out.println("Adding new button");
+                System.out.println("Adding new button");
                 newButton.setVisible(button.isVisible());
                 newButton.setSelection(button.getSelection());
                 newButton.setGrayed(button.getGrayed());
@@ -131,13 +190,14 @@ public class FullListView extends UiView {
             }
             getButtonGroup().update();
         }
-        // this.getModel().updateViews();
     }
 
     @Override
     public void addManyButtons(List<Object> labels) {
+
         for (int i = 0; i < labels.size(); i++) {
             addButton((String) labels.get(i));
+
         }
     }
 
@@ -225,6 +285,5 @@ public class FullListView extends UiView {
                 }
             }
         }
-
     }
 }

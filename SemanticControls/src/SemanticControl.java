@@ -1,4 +1,5 @@
-package controls;
+package src;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,10 +8,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
-/**
- * 
- */
 
 /**
  * @author stewartpowell
@@ -104,9 +101,7 @@ public abstract class SemanticControl {
      * Updates the View when the CurrValues of Model are changed
      */
     public void updateViews() {
-
         for (UiView view : views) {
-            System.out.println("Updating: " + view);
             view.updateView(currValue);
         }
     }

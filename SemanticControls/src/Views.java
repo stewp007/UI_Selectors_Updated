@@ -1,4 +1,4 @@
-package helper;
+package src;
 
 /**
  * @author stewartpowell This List of All Presenters used in the Semantic
@@ -28,5 +28,7 @@ public enum Views {
     /** A spinner with a set range */
     SPINNER,
     /** A slider with a set range */
-    SLIDER;
+    SLIDER,
+    /** A switch button for On/Off */
+    SWITCH;
 }
